@@ -1,0 +1,140 @@
+@import '../../index.scss';
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  height: 80px;
+  width: 100%;
+}
+
+.authenticated {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.burgerMenu {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.desktopMenu {
+  display: none;
+}
+
+.menu {
+  display: none;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu.open {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .burgerMenu {
+    display: none;
+  }
+
+  .desktopMenu {
+    display: flex;
+  }
+
+  .menu {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .burgerMenu {
+    display: block;
+  }
+
+  .desktopMenu {
+    display: none;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: #f8f8f8;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    left: 0;
+  }
+
+  .menu.open {
+    display: flex;
+  }
+}
+
+// .header {
+//   background-color: yellow;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   background: transparent;
+//   height: 80px;
+//   // padding: 0 30px;
+//   flex: 0 0 auto;
+//   width: 100%;
+//   box-sizing: border-box;
+// }
+
+// .logoContainer {
+//   flex: 0 0 auto;
+// }
+
+// .user_info {
+//   flex: 0 0 auto;
+// }
+
+// .menu {
+//   flex: 1;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 15px;
+// }
+
+// .menuButton {
+//   background: none;
+//   border: none;
+//   color: white;
+//   cursor: pointer;
+// }
+
+// .authenticated {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// }
+
+// .burgerMenu {
+//   display: none;
+//   background: none;
+//   border: none;
+//   color: white;
+//   font-size: 24px;
+//   cursor: pointer;
+// }
+
+// @media (max-width: 768px) {
+//   .header {
+//     background-color: green;
+//     height: auto;
+//     // padding: 10px 20px;
+//   }
+
+//   .burgerMenu {
+//     display: block;
+//   }
+// }

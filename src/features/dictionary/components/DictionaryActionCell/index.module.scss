@@ -1,0 +1,81 @@
+@import '../../../../index.scss';
+/* index.module.scss */
+.modal_backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal_content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close_btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modal_body {
+  margin-top: 10px;
+}
+
+.modal_footer {
+  margin-top: 20px;
+  text-align: right;
+}
+/* popover */
+.popoverContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.triggerBtn {
+  font-size: 16px;
+  padding: 0;
+  font-family: 'MacPaw Fixel Display';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5em;
+
+  color: #121417;
+}
+
+.popover_btn {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  padding: 0;
+}
+.iconEdit,
+.iconDelete {
+  padding-right: 8px;
+  width: 16px;
+  height: 16px;
+}
+.iconEdit {
+  stroke: #85aa9f;
+}
+.iconDelete {
+  fill: #85aa9f;
+}

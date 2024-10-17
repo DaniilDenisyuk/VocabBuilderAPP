@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { forwardRef } from 'react';
 
 const Ball = forwardRef(function Ball(props, ref) {

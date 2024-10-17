@@ -1,5 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import fetchCategories from './categoriesOperations';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getCategories } from '../../../infrastructure/utils/data/dataFunctions';
+export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
+  const categories = await getCategories();
+  return categories;
+});
 
 const categoriesSlice = createSlice({
   name: 'categories',

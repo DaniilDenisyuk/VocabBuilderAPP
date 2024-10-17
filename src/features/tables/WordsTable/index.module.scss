@@ -1,0 +1,156 @@
+@import '../../../index.scss';
+
+.tableContainer {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 15px;
+  overflow-x: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: rgba(133, 170, 159, 0.1);
+  color: #333;
+  text-align: left;
+  padding: 12px;
+  font-weight: bold;
+  border: 1px solid #dbdbdb;
+}
+
+tbody td {
+  padding: 12px;
+  border: 1px solid #dbdbdb;
+  text-align: left;
+}
+
+.tr {
+  background-color: #fff;
+}
+
+.td {
+  color: #555;
+}
+
+.td:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+th,
+td {
+  border: 1px solid #dbdbdb;
+}
+
+th {
+  padding: 12px;
+  text-align: left;
+  font-size: 16px;
+}
+
+td {
+  padding: 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 374px) {
+  .tableContainer {
+    padding: 10px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .progressContainer {
+    font-size: 12px;
+  }
+
+  table,
+  th,
+  td {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+  .tableContainer {
+    padding: 12px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .progressContainer {
+    font-size: 13px;
+  }
+
+  tbody td {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1439px) {
+  .tableContainer {
+    padding: 16px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .progressContainer {
+    font-size: 14px;
+  }
+
+  tbody td {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .tableContainer {
+    padding: 18px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 14px;
+    font-size: 18px;
+  }
+
+  .progressContainer {
+    font-size: 16px;
+  }
+
+  tbody td {
+    font-size: 16px;
+  }
+}

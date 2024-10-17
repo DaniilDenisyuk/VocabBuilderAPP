@@ -1,7 +1,8 @@
+//ModalDescription.jsx
 import { forwardRef, useEffect, useId } from 'react';
-import useModalContext from '../../repository/useModalContext';
 import style from './index.module.scss';
 import classNames from 'classnames';
+import useModalContext from '../../repository/useModalContext';
 
 export default forwardRef(function ModalDescription({ As = 'p', className, ...rest }, ref) {
   const { setDescriptionId } = useModalContext();

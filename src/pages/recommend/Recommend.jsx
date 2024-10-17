@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import WordsTable from '../features/tables/WordsTable/WordsTable';
 
 const Recommend = () => {

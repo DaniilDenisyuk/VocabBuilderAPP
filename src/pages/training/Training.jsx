@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 const Training = () => {
   return (
     <div className={styles.trainig_container}>

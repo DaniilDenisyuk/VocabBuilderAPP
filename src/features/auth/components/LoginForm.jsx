@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import authSchema from '../../../infrastructure/utils/authSchema';
 
 const LoginForm = ({ onSubmit }) => {

@@ -1,38 +1,43 @@
 //Modal.jsx
 
 import classNames from 'classnames';
-import ModalCloseBtn from '../ModalCloseBtn';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { forwardRef } from 'react';
 import { FloatingFocusManager, FloatingOverlay } from '@floating-ui/react';
 import useModalContext from '../../repository/useModalContext';
 import ModalLabel from '../ModalLabel';
 import ModalDescription from '../ModalDescription';
+import ModalCloseBtn from '../ModalCloseBtn';
 
 export default forwardRef(function Modal({ title, description, content, className, ...rest }, ref) {
-  const { context, isOpen, getFloatingProps, labelId, descriptionId } = useModalContext();
-  return isOpen ? (
-    <FloatingOverlay lockScroll>
+  const { context, open, getFloatingProps, labelId, descriptionId } = useModalContext();
+
+  return open ? (
+    <FloatingOverlay lockScroll className={styles.modalOverlay}>
       <FloatingFocusManager context={context}>
         <div
           {...getFloatingProps({
             ref,
-            className: classNames(styles.body, className),
+            className: classNames(styles.modalСontainer, className),
             'aria-labelledby': labelId,
             'aria-describedby': descriptionId,
             ...rest,
           })}
         >
-          <div className={styles.header}>
-            {typeof title === 'string' ? <ModalLabel>{title}</ModalLabel> : title}
+          <div>
+            {typeof title === 'string' ? (
+              <ModalLabel className={styles.modalHeader}>{title}</ModalLabel>
+            ) : (
+              title
+            )}
             {typeof description === 'string' ? (
-              <ModalDescription>{description}</ModalDescription>
+              <ModalDescription className={styles.modalDescription}>{description}</ModalDescription>
             ) : (
               description
             )}
             <ModalCloseBtn className={styles.closeBtn} />
           </div>
-          <div className={styles.content}>{content}</div>
+          <div className={styles.modalСontent}>{content}</div>
         </div>
       </FloatingFocusManager>
     </FloatingOverlay>

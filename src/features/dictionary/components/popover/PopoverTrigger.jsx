@@ -1,5 +1,5 @@
 //PopoverTrigger.jsx
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { usePopoverContext } from './usePopoverContext';
 
 export function PopoverTrigger({ children, onClick, ...props }) {

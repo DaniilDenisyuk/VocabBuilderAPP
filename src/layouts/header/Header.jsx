@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import Logo from '../logo/Logo.jsx';
 import UserBar from '../userBar/UserBar.jsx';
 import UserNav from '../userNav/UserNav';
@@ -24,15 +24,18 @@ const Header = () => {
       <Logo />
       {/* {isLogin && !isRefreshing && user ? ( */}
       <div className={styles.authenticated}>
-        <button className={styles.burgerMenu} onClick={toggleMenu}>
-          ☰
-        </button>
         <div className={`${styles.menu} ${menuOpen ? styles.open : ''}`}>
           <div className={styles.nav_menu}>
             <UserNav toggleMenu={toggleMenu} />
           </div>
         </div>
+        <div className={styles.desktopMenu}>
+          <UserNav />
+        </div>
         <UserBar user={user} className={styles.user_info} />
+        <button className={styles.burgerMenu} onClick={toggleMenu}>
+          ☰
+        </button>
       </div>
       {/* ) : null} */}
     </header>

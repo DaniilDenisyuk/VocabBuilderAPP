@@ -2,7 +2,7 @@ import { MdArrowRightAlt } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import sprite from '../../assets/icons/sprite.svg';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { logout } from '../../features/auth/redux/authOperations';
 
 const UserBar = ({ user }) => {

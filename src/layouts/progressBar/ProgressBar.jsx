@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 
 const ProgressBar = ({ progress }) => {
   const normalizedProgress = Math.min(100, Math.max(0, progress));

@@ -1,0 +1,62 @@
+@import '../../../../index.scss';
+.filterContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 80px;
+  margin-bottom: 28px;
+}
+.radioBtnInput {
+  display: none;
+}
+
+.radioBtnLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(133, 170, 159, 0.6);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+
+  &.checked {
+    border-color: #85aa9f;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #85aa9f;
+    }
+  }
+}
+
+.radioBtnText {
+  font-size: 16px;
+  color: #85aa9f;
+  margin-left: 16px;
+}
+
+.radioBtnInput:checked + .radioBtnLabel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #85aa9f;
+}
+
+.radioBtnInput:checked + .radioBtnLabel {
+  border-color: #85aa9f;
+}

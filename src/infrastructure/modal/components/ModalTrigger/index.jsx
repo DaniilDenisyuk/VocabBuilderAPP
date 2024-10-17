@@ -1,10 +1,13 @@
 // ModalTrigger.jsx
 import { forwardRef } from 'react';
-import useModalTrigger from '../../repository/useModalTrigger.js';
 import classNames from 'classnames';
 import style from './index.module.scss';
+import useModalTrigger from '../../repository/useModalTrigger';
+import useModalContext from '../../repository/useModalContext';
 
-export default forwardRef(function ModalTrigger({ children, className, ...rest }, outerRef) {
+const ModalTrigger = forwardRef(function ModalTrigger({ children, className, ...rest }, outerRef) {
+  const { setOpen } = useModalContext();
+
   const { getReferenceProps, ref } = useModalTrigger({ ref: outerRef });
   return (
     <button
@@ -12,6 +15,7 @@ export default forwardRef(function ModalTrigger({ children, className, ...rest }
         ref,
         className: classNames(style.btn, className),
         type: 'button',
+        onClick: () => setOpen(true),
         ...rest,
       })}
     >
@@ -19,3 +23,7 @@ export default forwardRef(function ModalTrigger({ children, className, ...rest }
     </button>
   );
 });
+export default ModalTrigger;
+//ModalTrigger:
+// Це компонент, який отримує outerRef через forwardRef і передає його в useModalTrigger.
+// В результаті useModalTrigger повертає злитий ref і необхідні пропси для елемента.

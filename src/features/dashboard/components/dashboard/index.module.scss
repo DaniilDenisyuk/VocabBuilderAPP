@@ -1,0 +1,133 @@
+@import '../../../../index.scss';
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0;
+  // padding: 16px;
+
+  @media (max-width: 374px) {
+    flex-direction: column;
+    // padding: 12px;
+  }
+
+  @media (min-width: 375px) and (max-width: 767px) {
+    // padding: 16px;
+  }
+
+  @media (min-width: 768px) and (max-width: 1439px) {
+    // padding: 24px;
+  }
+}
+
+.dashboardLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboardRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.addWordBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  gap: 8px;
+  width: 104px;
+  height: 24px;
+  border: none;
+  background-color: transparent;
+}
+
+.iconAdd {
+  width: 12px;
+  height: 12px;
+  color: #85aa9f;
+}
+
+.radioBtnGroup {
+  display: flex;
+  gap: 40px;
+
+  @media (max-width: 374px) {
+    gap: 16px;
+  }
+
+  @media (max-width: 767px) {
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    gap: 32px;
+  }
+}
+
+.radioBtnContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radioBtnInput {
+  display: none;
+}
+
+.radioBtnLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(133, 170, 159, 0.6);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+
+  &.checked {
+    border-color: #85aa9f;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #85aa9f;
+    }
+  }
+}
+
+.radioBtnText {
+  font-size: 16px;
+  color: #85aa9f;
+  margin-left: 16px;
+}
+
+.radioBtnInput:checked + .radioBtnLabel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #85aa9f;
+}
+
+.radioBtnInput:checked + .radioBtnLabel {
+  border-color: #85aa9f;
+}

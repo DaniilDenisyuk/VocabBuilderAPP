@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import sprite from '../../assets/icons/sprite.svg';
 import { Link } from 'react-router-dom';
 

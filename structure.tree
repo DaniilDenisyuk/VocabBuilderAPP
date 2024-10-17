@@ -59,7 +59,7 @@
 │  │  │  │  ├── AuthForm.jsx
 │  │  │  │  ├── LoginForm.jsx
 │  │  │  │  ├── RegisterForm.jsx
-│  │  │  │  └── styles.module.css
+│  │  │  │  └── index.module.scss
 │  │  │  └── redux
 │  │  │    ├── authOperations.js
 │  │  │    └── authSlice.js
@@ -75,23 +75,23 @@
 │  │  │  └── components
 │  │  │    ├── addWordButton
 │  │  │    │  ├── AddWordBtn.jsx
-│  │  │    │  └── styles.module.css
+│  │  │    │  └── index.module.scss
 │  │  │    └── dashboard
 │  │  │      ├── Dashboard.jsx
-│  │  │      └── styles.module.css
+│  │  │      └── index.module.scss
 │  │  ├── dictionary
 │  │  │  ├── components
 │  │  │  │  ├── CreateDictionaryRecordFormModal.jsx
 │  │  │  │  ├── DictionaryRecordActionCell
 │  │  │  │  │  ├── DictionaryActionCell.jsx
 │  │  │  │  │  ├── index.jsx
-│  │  │  │  │  └── styles.module.css
+│  │  │  │  │  └── index.module.scss
 │  │  │  │  └── popover
 │  │  │  │    ├── ArrowTooltip.jsx
 │  │  │  │    ├── Popover.jsx
 │  │  │  │    ├── PopoverContent.jsx
 │  │  │  │    ├── PopoverTrigger.jsx
-│  │  │  │    ├── styles.module.css
+│  │  │  │    ├── index.module.scss
 │  │  │  │    ├── usePopover.js
 │  │  │  │    └── usePopoverContext.js
 │  │  │  └── redux
@@ -107,7 +107,7 @@
 │  │  │    ├── components
 │  │  │    │  ├── AddWordForm.jsx
 │  │  │    │  ├── EditWordForm.jsx
-│  │  │    │  └── styles.module.css
+│  │  │    │  └── index.module.scss
 │  │  │    ├── FormProvider.js
 │  │  │    ├── tanstack
 │  │  │    │  └── WordForm.jsx
@@ -117,7 +117,7 @@
 │  │  │  │  ├── DynamicFormModal.jsx
 │  │  │  │  ├── FooterModalButtons.jsx
 │  │  │  │  ├── Modal.jsx
-│  │  │  │  ├── styles.module.css
+│  │  │  │  ├── index.module.scss
 │  │  │  │  └── WordModal.jsx
 │  │  │  ├── floatingUi
 │  │  │  │  └── useModalContext.js
@@ -128,7 +128,7 @@
 │  │  │    └── slice.js
 │  │  ├── tables
 │  │  │  └── WordsTable
-│  │  │    ├── styles.module.css
+│  │  │    ├── index.module.scss
 │  │  │    └── WordsTable.jsx
 │  │  └── training
 │  │    ├── ProgressBar.jsx
@@ -148,7 +148,7 @@
 │  │  │  └── store.js
 │  │  ├── testing
 │  │  │  ├── components
-│  │  │  │  ├── styles.module.css
+│  │  │  │  ├── index.module.scss
 │  │  │  │  └── TestPage.jsx
 │  │  │  ├── popoverDan
 │  │  │  │  ├── components
@@ -165,10 +165,10 @@
 │  │  │      ├── task1
 │  │  │      │  ├── Ball.jsx
 │  │  │      │  ├── BallMover.jsx
-│  │  │      │  └── styles.module.css
+│  │  │      │  └── index.module.scss
 │  │  │      └── task2
 │  │  │        ├── DispalyRundomValue.jsx
-│  │  │        ├── styles.module.css
+│  │  │        ├── index.module.scss
 │  │  │        └── ValueDisplay.jsx
 │  │  └── utils
 │  │    ├── authSchema.js
@@ -179,16 +179,16 @@
 │  ├── layouts
 │  │  ├── header
 │  │  │  ├── Header.jsx
-│  │  │  └── styles.module.css
+│  │  │  └── index.module.scss
 │  │  ├── logo
 │  │  │  ├── Logo.jsx
-│  │  │  └── styles.module.css
+│  │  │  └── index.module.scss
 │  │  ├── MainLayout.jsx
 │  │  ├── progressBar
 │  │  │  ├── ProgressBar.jsx
-│  │  │  └── styles.module.css
+│  │  │  └── index.module.scss
 │  │  ├── userBar
-│  │  │  ├── styles.module.css
+│  │  │  ├── index.module.scss
 │  │  │  └── UserBar.jsx
 │  │  └── userNav
 │  │    ├── UserNav.jsx
@@ -197,15 +197,15 @@
 │  └── pages
 │    ├── dictionary
 │    │  ├── Dictionary.jsx
-│    │  └── styles.module.css
+│    │  └── index.module.scss
 │    ├── home
 │    │  ├── Home.jsx
-│    │  └── styles.module.css
+│    │  └── index.module.scss
 │    ├── recommend
 │    │  ├── Recommend.jsx
-│    │  └── styles.module.css
+│    │  └── index.module.scss
 │    └── training
-│      ├── styles.module.css
+│      ├── index.module.scss
 │      └── Training.jsx
 ├── vercel.json
 └── vite.config.js

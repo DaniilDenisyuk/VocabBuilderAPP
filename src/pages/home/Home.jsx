@@ -1,5 +1,5 @@
 // Home.jsx
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { useState, useEffect } from 'react';
 import imgTitleRegisterWebP from '../../assets/img/illustration1x.webp';
 import imgTitleRegister2xWebP from '../../assets/img/illustration2x.webp';

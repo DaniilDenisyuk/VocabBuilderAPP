@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 
 const UserNav = () => {
   return (

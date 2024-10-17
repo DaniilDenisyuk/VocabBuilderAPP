@@ -1,5 +1,5 @@
 import Ball from './Ball';
-import styles from './styles.module.css';
+import styles from './index.module.scss';
 import { useEffect, useRef, useState } from 'react';
 
 export default function BallMover() {
