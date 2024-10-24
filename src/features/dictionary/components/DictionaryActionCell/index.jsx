@@ -6,29 +6,28 @@ import styles from './index.module.scss';
 import EditWordFormModal from '../../../dashboard/components/editWordFormModal/EditWordFormModal';
 import ModalProvider from '../../../../infrastructure/modal/components/ModalProvider';
 import ModalTrigger from '../../../../infrastructure/modal/components/ModalTrigger';
-import { useWords } from '../../../dashboard/WordProvider';
 import Popover from '../popover/Popover';
 import { PopoverTrigger } from '../popover/PopoverTrigger';
 import { PopoverContent } from '../popover/PopoverContent';
+import { useDispatch } from 'react-redux';
+import { deleteWord } from '../../redux/wordsOperations';
 
 export default function DictionaryActionCell({ row }) {
+  const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentWord, setCurrentWord] = useState(null);
-
-  const { removeWord } = useWords();
 
   const handleDelete = useCallback(() => {
     try {
       const wordId = row.original.id;
-      console.log(`Deleting word with ID: ${wordId}`);
-      removeWord(wordId);
+      dispatch(deleteWord(wordId));
     } catch (error) {
       console.error('Error deleting word:', error);
     }
-  }, [row.original.id, removeWord]);
+  }, [row.original.id, deleteWord]);
 
   const handleEditClick = () => {
-    console.log('Selected word:', row.original);
     setCurrentWord(row.original);
     setIsModalOpen(true);
   };

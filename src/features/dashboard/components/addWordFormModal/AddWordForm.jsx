@@ -3,11 +3,16 @@ import Joi from 'joi';
 import classNames from 'classnames';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { v4 as uuidv4 } from 'uuid';
-import { useWords } from '../../WordProvider';
 import styles from './index.module.scss';
 import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
 import CategoriesSelector from '../../../category/components';
-import { useCategory } from '../../../category/components/CategoryProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchCategories } from '../../../category/redux/categoriesSlice';
+import { trimObjStrValues } from '../../../../infrastructure/testing/tasks';
+import { addWord } from '../../../dictionary/redux/wordsOperations';
+import { selectWords } from '../../../dictionary/redux/wordsSlice';
+import { selectCategories } from '../../../category/redux/categoriesSelectors';
 
 export default function AddWordForm({ onClose, className }) {
   const defaultValues = {
@@ -41,17 +46,22 @@ export default function AddWordForm({ onClose, className }) {
     resolver: joiResolver(schema),
   });
 
-  const { addWord, words } = useWords();
   const { errors } = methods.formState;
-  const {
-    categories,
-    selectedCategory,
-    selectedVerbType,
-    handleCategoryChange,
-    handleVerbTypeChange,
-  } = useCategory();
+  const categories = useSelector(selectCategories);
 
-  const onSubmit = data => {
+  const selectedCategory = methods.watch('category');
+  const selectedVerbType = methods.watch('verbType');
+
+  const dispatch = useDispatch();
+  const words = useSelector(selectWords);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const onSubmit = async data => {
+    const trimmedData = trimObjStrValues(data);
+
     const existingWord = words.find(word => word.en === data.en);
     if (existingWord) {
       methods.setError('en', {
@@ -62,12 +72,14 @@ export default function AddWordForm({ onClose, className }) {
     }
 
     try {
-      addWord({
-        ...data,
-        id: uuidv4(),
-        progress: 0,
-        verbType: selectedCategory === 'Verb' ? selectedVerbType : undefined,
-      });
+      await dispatch(
+        addWord({
+          ...trimmedData,
+          id: uuidv4(),
+          progress: 0,
+          verbType: selectedCategory === 'Verb' ? selectedVerbType : undefined,
+        })
+      );
       methods.reset();
       onClose();
     } catch (error) {
@@ -85,8 +97,7 @@ export default function AddWordForm({ onClose, className }) {
           <div>
             <CategoriesSelector
               name="category"
-              categories={categories}
-              onChange={handleCategoryChange}
+              onChange={e => methods.setValue('category', e.target.value)}
               error={errors.category}
             />
             {errors.category && (
@@ -100,9 +111,7 @@ export default function AddWordForm({ onClose, className }) {
         {selectedCategory === 'Verb' && (
           <VerbTypeSwitch
             selectedVerbType={selectedVerbType}
-            onChange={handleVerbTypeChange}
-            // selectedVerbType={methods.watch('verbType')}
-            // onChange={e => methods.setValue('verbType', e.target.value)}
+            onChange={e => methods.setValue('verbType', e.target.value)}
             className={classNames(styles.radioBtnContainer)}
             selectStyleName="modal"
           />

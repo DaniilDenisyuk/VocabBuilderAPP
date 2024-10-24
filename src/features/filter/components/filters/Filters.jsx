@@ -3,24 +3,25 @@ import styles from './index.module.scss';
 import SearchInput from '../searchInput/SearchInput';
 import CategoriesSelector from '../../../category/components';
 import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
-import { useCategory } from '../../../category/components/CategoryProvider';
 
 export default function Filters({
   selectedCategory,
   selectedVerbType,
   handleCategoryChange,
   handleVerbTypeChange,
-  searchQuery,
-  setSearchQuery,
+  categories,
+  searchValue,
+  setSearchValue,
 }) {
-  const { categories } = useCategory();
   return (
     <div className={styles.filterContainer}>
-      <SearchInput value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-      {categories.length > 0 ? (
-        <CategoriesSelector categories={categories} onChange={handleCategoryChange} />
-      ) : (
-        <p>No categories available</p>
+      <SearchInput value={searchValue} onChange={e => setSearchValue(e)} />
+      {categories && (
+        <CategoriesSelector
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onChange={handleCategoryChange}
+        />
       )}
       {selectedCategory === 'Verb' && (
         <VerbTypeSwitch

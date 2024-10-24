@@ -1,22 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCategories } from './categoriesOperations';
+import fetchCategories from '../../category/redux/categoriesOperations';
 
 const filtersSlice = createSlice({
   name: 'filters',
   initialState: {
     categories: [],
+    searchQuery: '',
     selectedCategory: '',
-    keyword: '',
+    selectedVerbType: 'Regular',
   },
   reducers: {
-    setCategories(state, action) {
-      state.categories = action.payload;
-    },
+    // оновлює обрану категорію
     setSelectedCategory(state, action) {
       state.selectedCategory = action.payload;
     },
-    setKeyword(state, action) {
-      state.keyword = action.payload;
+    //оновлює пошуковий запит
+    setSearchQuery(state, action) {
+      state.searchQuery = action.payload;
+    },
+    //оновлює обраний тип дієслова
+    setSelectedVerbType(state, action) {
+      state.selectedVerbType = action.payload;
     },
   },
   extraReducers: builder => {
@@ -26,5 +30,13 @@ const filtersSlice = createSlice({
   },
 });
 
-export const { setCategories, setSelectedCategory, setKeyword } = filtersSlice.actions;
+export const { setSelectedCategory, setSearchQuery, setSelectedVerbType } = filtersSlice.actions;
+
+export const selectFilters = state => state.filters;
+export const selectCategories = state => state.filters.categories; // Для отримання категорій
+
+export const selectSearchQuery = state => state.filters.searchQuery;
+export const selectSelectedCategory = state => state.filters.selectedCategory;
+export const selectSelectedVerbType = state => state.filters.selectedVerbType;
+
 export default filtersSlice.reducer;

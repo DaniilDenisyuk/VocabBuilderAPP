@@ -5,20 +5,56 @@ import AddWordFormModal from '../addWordFormModal/AddWordFormModal';
 import ModalProvider from '../../../../infrastructure/modal/components/ModalProvider';
 import ModalTrigger from '../../../../infrastructure/modal/components/ModalTrigger';
 import Filters from '../../../filter/components/filters/Filters';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCategories } from '../../../category/redux/categoriesSelectors';
+import { useCallback, useEffect, useState } from 'react';
+import { fetchCategories } from '../../../category/redux/categoriesSlice';
+import {
+  setSelectedVerbType,
+  selectSelectedCategory,
+  selectSearchQuery,
+  selectSelectedVerbType,
+} from '../../../filter/redux/filtersSlice';
+import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
 
-export default function Dashboard({ onClose, className, categories }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedVerbType, setSelectedVerbType] = useState('');
+export default function Dashboard({ setSearchQuery, setSelectedCategory, className, onClose }) {
+  const dispatch = useDispatch();
+  const categories = useSelector(selectCategories);
+  const searchQuery = useSelector(selectSearchQuery);
+  const selectedCategory = useSelector(selectSelectedCategory);
+  const selectedVerbType = useSelector(selectSelectedVerbType);
+  const [showVerbOptions, setShowVerbOptions] = useState(false);
 
-  const handleCategoryChange = newCategory => {
-    setSelectedCategory(newCategory);
-  };
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
-  const handleVerbTypeChange = newVerbType => {
-    setSelectedVerbType(newVerbType);
-  };
+  const handleSearchQueryChange = useCallback(
+    e => {
+      setSearchQuery(e);
+      dispatch(setSearchQuery(e));
+    },
+    [dispatch, setSearchQuery]
+  );
+
+  const handleCategoryChange = useCallback(
+    e => {
+      const category = e.target.value;
+      setSelectedCategory(category);
+      dispatch(setSelectedCategory(category));
+    },
+    [dispatch, setSelectedCategory]
+  );
+
+  const handleVerbTypeChange = useCallback(
+    e => {
+      const newVerbType = e.target.value;
+      dispatch(setSelectedVerbType(newVerbType));
+      setShowVerbOptions(newVerbType === 'Verb');
+    },
+    [dispatch]
+  );
+
   return (
     <div className={classNames(styles.dashboard, className)}>
       <div className={styles.dashboardLeft}>
@@ -26,11 +62,19 @@ export default function Dashboard({ onClose, className, categories }) {
           categories={categories}
           selectedCategory={selectedCategory}
           selectedVerbType={selectedVerbType}
+          searchQuery={searchQuery}
+          setSearchQuery={handleSearchQueryChange}
           handleCategoryChange={handleCategoryChange}
           handleVerbTypeChange={handleVerbTypeChange}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
         />
+        {showVerbOptions && (
+          <VerbTypeSwitch
+            selectedVerbType={selectedVerbType}
+            onChange={handleVerbTypeChange}
+            className={classNames(styles.radioBtnContainer)}
+            selectStyleName="modal"
+          />
+        )}
       </div>
       <div className={styles.dashboardRight}>
         <ModalProvider>
