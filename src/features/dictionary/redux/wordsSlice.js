@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { addWord, deleteWord, fetchWords, updateWord } from './wordsOperations';
-import { createSelector } from 'reselect';
-import { selectSearchQuery, selectSelectedCategory } from '../../filter/redux/filtersSlice';
 
 const initialState = {
   words: [],
@@ -66,20 +64,3 @@ export default wordsSlice.reducer;
 export const selectWords = state => state.words.words;
 export const selectLoading = state => state.words.loading;
 export const selectError = state => state.words.error;
-
-export const selectFilteredWords = createSelector(
-  [selectWords, selectSearchQuery, selectSelectedCategory],
-  (words, searchQuery, selectedCategory) => {
-    // console.log('Words:', words);
-    // console.log('Search Query:', searchQuery);
-    // console.log('Selected Category:', selectedCategory);
-
-    return words.filter(word => {
-      const matchesQuery =
-        word.en.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        word.ua.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory ? word.category === selectedCategory : true;
-      return matchesQuery && matchesCategory;
-    });
-  }
-);
