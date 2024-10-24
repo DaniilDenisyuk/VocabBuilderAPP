@@ -6,67 +6,29 @@ import ModalProvider from '../../../../infrastructure/modal/components/ModalProv
 import ModalTrigger from '../../../../infrastructure/modal/components/ModalTrigger';
 import Filters from '../../../filter/components/filters/Filters';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCategories } from '../../../category/redux/categoriesSelectors';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchCategories } from '../../../category/redux/categoriesSlice';
-import {
-  setSelectedVerbType,
-  selectSelectedCategory,
-  selectSearchQuery,
-  selectSelectedVerbType,
-} from '../../../filter/redux/filtersSlice';
+import { setSelectedVerbType, selectSelectedVerbType } from '../../../filter/redux/filtersSlice';
 import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
 
-export default function Dashboard({ setSearchQuery, setSelectedCategory, className, onClose }) {
+export default function Dashboard({ className, onClose }) {
   const dispatch = useDispatch();
-  const categories = useSelector(selectCategories);
-  const searchQuery = useSelector(selectSearchQuery);
-  const selectedCategory = useSelector(selectSelectedCategory);
   const selectedVerbType = useSelector(selectSelectedVerbType);
-  const [showVerbOptions, setShowVerbOptions] = useState(false);
+  const [showVerbOptions] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const handleSearchQueryChange = useCallback(
-    e => {
-      setSearchQuery(e);
-      dispatch(setSearchQuery(e));
-    },
-    [dispatch, setSearchQuery]
-  );
-
-  const handleCategoryChange = useCallback(
-    e => {
-      const category = e.target.value;
-      setSelectedCategory(category);
-      dispatch(setSelectedCategory(category));
-    },
-    [dispatch, setSelectedCategory]
-  );
-
   const handleVerbTypeChange = useCallback(
-    e => {
-      const newVerbType = e.target.value;
-      dispatch(setSelectedVerbType(newVerbType));
-      setShowVerbOptions(newVerbType === 'Verb');
-    },
+    e => dispatch(setSelectedVerbType(e.target.value)),
     [dispatch]
   );
 
   return (
     <div className={classNames(styles.dashboard, className)}>
       <div className={styles.dashboardLeft}>
-        <Filters
-          categories={categories}
-          selectedCategory={selectedCategory}
-          selectedVerbType={selectedVerbType}
-          searchQuery={searchQuery}
-          setSearchQuery={handleSearchQueryChange}
-          handleCategoryChange={handleCategoryChange}
-          handleVerbTypeChange={handleVerbTypeChange}
-        />
+        <Filters />
         {showVerbOptions && (
           <VerbTypeSwitch
             selectedVerbType={selectedVerbType}

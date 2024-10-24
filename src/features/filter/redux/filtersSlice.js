@@ -33,8 +33,7 @@ const filtersSlice = createSlice({
 export const { setSelectedCategory, setSearchQuery, setSelectedVerbType } = filtersSlice.actions;
 
 export const selectFilters = state => state.filters;
-export const selectCategories = state => state.filters.categories; // Для отримання категорій
-
+export const selectCategories = state => state.filters.categories;
 export const selectSearchQuery = state => state.filters.searchQuery;
 export const selectSelectedCategory = state => state.filters.selectedCategory;
 export const selectSelectedVerbType = state => state.filters.selectedVerbType;
