@@ -1,14 +1,24 @@
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './index.module.scss';
+import { fetchCategories } from '../redux/categoriesSlice';
+import { useEffect } from 'react';
 
-const CategoriesSelector = ({ categories, onChange }) => {
-  const categoryList = Array.isArray(categories) ? categories : [];
+const CategoriesSelector = ({ onChange }) => {
+  const dispatch = useDispatch();
+  const { categories, status } = useSelector(state => state.categories);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, status]);
 
   return (
     <select onChange={onChange} className={styles.select}>
       <option value="">Select category</option>
-      {categoryList.map(category => (
-        <option key={category.id} value={category.name}>
-          {category.name}
+      {categories.map(category => (
+        <option key={category} value={category}>
+          {category}
         </option>
       ))}
     </select>

@@ -1,20 +1,28 @@
 import WordsTable from '../../features/tables/WordsTable';
 import styles from './index.module.scss';
-import { WordProvider } from '../../features/dashboard/WordProvider';
 import Dashboard from '../../features/dashboard/components/dashboard';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchWords } from '../../features/dictionary/redux/wordsOperations';
+import { selectError, selectLoading } from '../../features/dictionary/redux/wordsSlice';
+import { selectFilteredWords } from '../../features/filter/redux/filtersSlice';
 
 export default function Dictionary() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const filteredWords = useSelector(selectFilteredWords);
+
+  useEffect(() => {
+    dispatch(fetchWords());
+  }, [dispatch]);
 
   return (
     <div className={styles.container}>
-      <WordProvider>
-        <Dashboard setSearchQuery={setSearchQuery} />
-        <WordsTable searchQuery={searchQuery} />{' '}
-      </WordProvider>
-
-      {/* <WordsPagination /> */}
+      <Dashboard />
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      <WordsTable filteredWords={filteredWords} />
     </div>
   );
 }

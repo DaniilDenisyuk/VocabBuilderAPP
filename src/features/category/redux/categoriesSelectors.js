@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
-const selectCategoriesState = state => state.categories;
-const selectWordsState = state => state.words;
+const selectCategoriesState = state => state.categories || {};
+const selectWordsState = state => state.words || {};
 
 export const selectCategories = createSelector(
   [selectCategoriesState],

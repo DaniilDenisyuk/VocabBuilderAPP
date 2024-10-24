@@ -7,24 +7,9 @@ import {
 import styles from './index.module.scss';
 import ProgressBar from '../../../layouts/progressBar/ProgressBar';
 import DictionaryActionCell from '../../dictionary/components/DictionaryActionCell';
-import { useWords } from '../../dashboard/WordProvider';
 import { useMemo } from 'react';
 
-const WordsTable = ({ onEdit, onDelete, searchQuery, selectedCategory }) => {
-  const { words } = useWords();
-
-  const filteredWords = useMemo(() => {
-    return words.filter(word => {
-      const matchesSearch =
-        word.en.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        word.ua.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesCategory = selectedCategory ? word.category === selectedCategory : true;
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [words, searchQuery, selectedCategory]);
-
+const WordsTable = ({ onEdit, onDelete, filteredWords }) => {
   const columnHelper = createColumnHelper();
   const columns = useMemo(
     () => [

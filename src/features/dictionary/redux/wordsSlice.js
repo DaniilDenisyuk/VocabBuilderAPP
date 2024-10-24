@@ -1,57 +1,63 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addWord, deleteWord, fetchWords, updateWord } from './operations';
+import { addWord, deleteWord, fetchWords, updateWord } from './wordsOperations';
 
 const initialState = {
   words: [],
   loading: false,
   error: null,
 };
+
 const wordsSlice = createSlice({
   name: 'words',
   initialState,
-  reducers: {},
+  reducers: {
+    setWords: (state, action) => {
+      state.words = action.payload;
+    },
+  },
   extraReducers: builder => {
+    const handlePending = state => {
+      state.loading = true;
+      state.error = null;
+    };
+
+    const handleRejected = (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    };
+
     builder
-      .addCase(fetchWords.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
+      .addCase(fetchWords.pending, handlePending)
       .addCase(fetchWords.fulfilled, (state, action) => {
         state.words = action.payload;
         state.loading = false;
       })
-      .addCase(fetchWords.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(addWord.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
+      .addCase(fetchWords.rejected, handleRejected)
+      .addCase(addWord.pending, handlePending)
       .addCase(addWord.fulfilled, (state, action) => {
         state.words.push(action.payload);
         state.loading = false;
       })
-      .addCase(addWord.rejected, (state, action) => {
-        state.error = action.payload;
-      })
+      .addCase(addWord.rejected, handleRejected)
+      .addCase(updateWord.pending, handlePending)
       .addCase(updateWord.fulfilled, (state, action) => {
         const index = state.words.findIndex(word => word.id === action.payload.id);
         if (index !== -1) {
           state.words[index] = action.payload;
         }
+        state.loading = false;
       })
-      .addCase(updateWord.rejected, (state, action) => {
-        state.error = action.payload;
-      })
+      .addCase(updateWord.rejected, handleRejected)
+      .addCase(deleteWord.pending, handlePending)
       .addCase(deleteWord.fulfilled, (state, action) => {
         state.words = state.words.filter(word => word.id !== action.payload);
+        state.loading = false;
       })
-      .addCase(deleteWord.rejected, (state, action) => {
-        state.error = action.payload;
-      });
+      .addCase(deleteWord.rejected, handleRejected);
   },
 });
+
+export const { setWords } = wordsSlice.actions;
 
 export default wordsSlice.reducer;
 

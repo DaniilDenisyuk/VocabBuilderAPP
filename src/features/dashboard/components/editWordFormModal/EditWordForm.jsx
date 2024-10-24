@@ -2,7 +2,9 @@ import { useForm, FormProvider } from 'react-hook-form';
 import styles from './index.module.scss';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useWords } from '../../WordProvider';
+import { trimObjStrValues } from '../../../../infrastructure/testing/tasks';
+import { useDispatch } from 'react-redux';
+import { updateWord } from '../../../dictionary/redux/wordsOperations';
 
 const schema = Joi.object({
   en: Joi.string().required().messages({ 'string.base': 'Invalid English word' }),
@@ -16,14 +18,14 @@ export default function EditWordForm({ wordData, onClose }) {
   });
 
   const { errors } = methods.formState;
-  const { editWord } = useWords();
+  const dispatch = useDispatch();
 
   const onSubmit = async data => {
-    console.log('Submitting data:', data);
+    const trimmedData = trimObjStrValues(data);
 
     try {
-      if (data.en !== wordData.en || data.ua !== wordData.ua) {
-        await editWord({ ...wordData, ...data });
+      if (trimmedData.en !== wordData.en || trimmedData.ua !== wordData.ua) {
+        await dispatch(updateWord({ ...wordData, ...trimmedData }));
       }
       onClose();
     } catch (error) {
