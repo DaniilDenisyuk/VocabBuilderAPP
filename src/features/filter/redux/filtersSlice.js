@@ -8,7 +8,7 @@ const filtersSlice = createSlice({
     categories: [],
     searchQuery: '',
     selectedCategory: '',
-    selectedVerbType: 'Regular',
+    selectedVerbType: '',
   },
   reducers: {
     // оновлює обрану категорію

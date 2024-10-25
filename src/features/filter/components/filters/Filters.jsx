@@ -3,42 +3,22 @@ import styles from './index.module.scss';
 import { CiSearch } from 'react-icons/ci';
 import CategoriesSelector from '../../../category/components';
 import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
-import { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
 import { debounce } from 'lodash-es';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Filters({ onCategoryChange }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  // console.log('navigate:', navigate);
-  // console.log('location:', location);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // const parsedQuery = queryString.parse(location.search);
-  // // console.log('parsedQuery', parsedQuery);
-  // const [localQuery, setLocalQuery] = useState({
-  //   searchQuery: parsedQuery.searchQuery || '',
-  //   category: parsedQuery.category || '',
-  //   verbType: parsedQuery.verbType || '',
-  // });
-
-  const searchParams = new URLSearchParams(location.search);
-
-  const getSearchParams = () => ({
-    searchQuery: searchParams.get('searchQuery') || '',
-    category: searchParams.get('category') || '',
-    verbType: searchParams.get('verbType') || '',
-  });
-
-  const [localQuery, setLocalQuery] = useState(getSearchParams());
+  const searchQuery = searchParams.get('searchQuery') || '';
+  const category = searchParams.get('category') || '';
+  const verbType = searchParams.get('verbType') || '';
 
   const updQueryString = newParams => {
     Object.entries(newParams).forEach(([key, value]) => {
       value ? searchParams.set(key, value) : searchParams.delete(key);
     });
-    navigate({
-      pathname: location.pathname,
-      search: searchParams.toString(),
-    });
+    setSearchParams(searchParams);
   };
 
   const handleSearchChange = useCallback(
@@ -50,27 +30,19 @@ export default function Filters({ onCategoryChange }) {
 
   const handleInputChange = e => {
     const query = e.target.value;
-    setLocalQuery(prev => ({ ...prev, searchQuery: query }));
     handleSearchChange(query);
   };
 
   const handleCategoryChange = e => {
-    const category = e.target.value;
-    setLocalQuery(prev => ({ ...prev, category, verbType: '' }));
-    updQueryString({ category, verbType: '' });
-
+    const selectedCategory = e.target.value;
+    updQueryString({ category: selectedCategory, verbType: '' });
     onCategoryChange(category);
   };
 
   const handleVerbTypeChange = useCallback(e => {
     const verbType = e.target.value;
-    setLocalQuery(prev => ({ ...prev, verbType }));
     updQueryString({ verbType });
   }, []);
-
-  useEffect(() => {
-    setLocalQuery(getSearchParams());
-  }, [location.search]);
 
   return (
     <div className={styles.filterContainer}>
@@ -78,18 +50,18 @@ export default function Filters({ onCategoryChange }) {
         <input
           type="text"
           placeholder="Search words..."
-          value={localQuery.searchQuery}
+          value={searchQuery}
           onChange={handleInputChange}
           className={styles.searchInput}
         />
         <CiSearch className={styles.searchIcon} />
       </div>
 
-      <CategoriesSelector selectedCategory={localQuery.category} onChange={handleCategoryChange} />
-      {localQuery.category === 'Verb' && (
+      <CategoriesSelector selectedCategory={category} onChange={handleCategoryChange} />
+      {category === 'Verb' && (
         <VerbTypeSwitch
           className={classNames(styles.radioBtnContainer)}
-          selectedVerbType={localQuery.verbType}
+          selectedVerbType={verbType}
           onChange={handleVerbTypeChange}
           variant="dashboard"
         />
