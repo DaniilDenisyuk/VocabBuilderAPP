@@ -5,37 +5,46 @@ import CategoriesSelector from '../../../category/components';
 import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import queryString from 'query-string';
 import { debounce } from 'lodash-es';
 
-export default function Filters() {
+export default function Filters({ onCategoryChange }) {
   const navigate = useNavigate();
   const location = useLocation();
   // console.log('navigate:', navigate);
   // console.log('location:', location);
 
-  const parsedQuery = queryString.parse(location.search);
-  // console.log('parsedQuery', parsedQuery);
-  const [localQuery, setLocalQuery] = useState({
-    searchQuery: parsedQuery.searchQuery || '',
-    category: parsedQuery.category || '',
-    verbType: parsedQuery.verbType || '',
+  // const parsedQuery = queryString.parse(location.search);
+  // // console.log('parsedQuery', parsedQuery);
+  // const [localQuery, setLocalQuery] = useState({
+  //   searchQuery: parsedQuery.searchQuery || '',
+  //   category: parsedQuery.category || '',
+  //   verbType: parsedQuery.verbType || '',
+  // });
+
+  const searchParams = new URLSearchParams(location.search);
+
+  const getSearchParams = () => ({
+    searchQuery: searchParams.get('searchQuery') || '',
+    category: searchParams.get('category') || '',
+    verbType: searchParams.get('verbType') || '',
   });
 
+  const [localQuery, setLocalQuery] = useState(getSearchParams());
+
   const updQueryString = newParams => {
+    Object.entries(newParams).forEach(([key, value]) => {
+      value ? searchParams.set(key, value) : searchParams.delete(key);
+    });
     navigate({
       pathname: location.pathname,
-      search: queryString.stringify({
-        ...parsedQuery,
-        ...newParams,
-      }),
+      search: searchParams.toString(),
     });
   };
 
   const handleSearchChange = useCallback(
     debounce(query => {
       updQueryString({ searchQuery: query });
-    }, 1000),
+    }, 300),
     []
   );
 
@@ -49,21 +58,18 @@ export default function Filters() {
     const category = e.target.value;
     setLocalQuery(prev => ({ ...prev, category, verbType: '' }));
     updQueryString({ category, verbType: '' });
+
+    onCategoryChange(category);
   };
 
   const handleVerbTypeChange = useCallback(e => {
     const verbType = e.target.value;
     setLocalQuery(prev => ({ ...prev, verbType }));
     updQueryString({ verbType });
-  });
+  }, []);
 
   useEffect(() => {
-    // console.log('Parsed Query:', parsedQuery);
-    setLocalQuery({
-      searchQuery: parsedQuery.searchQuery || '',
-      category: parsedQuery.category || '',
-      verbType: parsedQuery.verbType || '',
-    });
+    setLocalQuery(getSearchParams());
   }, [location.search]);
 
   return (
@@ -83,7 +89,7 @@ export default function Filters() {
       {localQuery.category === 'Verb' && (
         <VerbTypeSwitch
           className={classNames(styles.radioBtnContainer)}
-          selectedVerbType={localQuery.category.verbType}
+          selectedVerbType={localQuery.verbType}
           onChange={handleVerbTypeChange}
           variant="dashboard"
         />

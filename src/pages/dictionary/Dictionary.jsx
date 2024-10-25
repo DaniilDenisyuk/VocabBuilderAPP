@@ -10,7 +10,6 @@ import {
   selectWords,
 } from '../../features/dictionary/redux/wordsSlice';
 import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
 
 export default function Dictionary() {
   const dispatch = useDispatch();
@@ -23,7 +22,13 @@ export default function Dictionary() {
     dispatch(fetchWords());
   }, [dispatch]);
 
-  const filters = useMemo(() => queryString.parse(location.search), [location.search]);
+  const searchParams = new URLSearchParams(location.search);
+
+  const filters = {
+    searchQuery: searchParams.get('searchQuery') || '',
+    category: searchParams.get('category') || '',
+    verbType: searchParams.get('verbType') || '',
+  };
 
   const filteredWords = useMemo(() => {
     return words.filter(word => {
@@ -32,7 +37,10 @@ export default function Dictionary() {
           word.ua.toLowerCase().includes(filters.searchQuery.toLowerCase())
         : true;
       const isMatchCategory = filters.category ? word.category === filters.category : true;
-      const isMatchVerbType = filters.verbType ? word.verbType === filters.verbType : true;
+      const isMatchVerbType = filters.verbType
+        ? (filters.verbType === 'Regular' && word.Regular) ||
+          (filters.verbType === 'Irregular' && word.Irregular)
+        : true;
 
       return isMatchSearchQuery && isMatchCategory && isMatchVerbType;
     });
