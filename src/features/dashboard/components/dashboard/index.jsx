@@ -14,7 +14,7 @@ import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
 export default function Dashboard({ className, onClose }) {
   const dispatch = useDispatch();
   const selectedVerbType = useSelector(selectSelectedVerbType);
-  const [showVerbOptions, setShowVerbOptions] = useState(false);
+  const [showVerbOptions] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -25,14 +25,10 @@ export default function Dashboard({ className, onClose }) {
     [dispatch]
   );
 
-  const handleCategoryChange = category => {
-    setShowVerbOptions(category === 'Verb');
-  };
-
   return (
     <div className={classNames(styles.dashboard, className)}>
       <div className={styles.dashboardLeft}>
-        <Filters onCategoryChange={handleCategoryChange} />
+        <Filters />
         {showVerbOptions && (
           <VerbTypeSwitch
             selectedVerbType={selectedVerbType}

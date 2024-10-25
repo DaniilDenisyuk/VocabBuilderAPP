@@ -12,6 +12,7 @@ const categoriesSlice = createSlice({
   initialState: {
     words: data,
     categories: [],
+    verbType: 'Regular',
     status: 'idle',
     error: null,
   },
