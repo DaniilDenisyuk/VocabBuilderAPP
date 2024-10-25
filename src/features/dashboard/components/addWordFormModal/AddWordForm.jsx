@@ -113,7 +113,7 @@ export default function AddWordForm({ onClose, className }) {
             selectedVerbType={selectedVerbType}
             onChange={e => methods.setValue('verbType', e.target.value)}
             className={classNames(styles.radioBtnContainer)}
-            selectStyleName="modal"
+            variant="modal"
           />
         )}
 

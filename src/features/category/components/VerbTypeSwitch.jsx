@@ -1,14 +1,9 @@
 import classNames from 'classnames';
 import styles from './index.module.scss';
 
-const VerbTypeSwitch = ({ selectedVerbType, onChange, className, selectStyleName = 'modal' }) => {
+const VerbTypeSwitch = ({ selectedVerbType, onChange, className, variant = 'modal' }) => {
   const RadioButton = ({ id, value, checked, label }) => (
-    <div
-      className={classNames(
-        styles.radioBtnContainer,
-        styles[`radioBtnContainer--${selectStyleName}`]
-      )}
-    >
+    <div className={classNames(styles.radioBtnContainer, styles[`radioBtnContainer--${variant}`])}>
       <input
         id={id}
         type="radio"
@@ -21,9 +16,7 @@ const VerbTypeSwitch = ({ selectedVerbType, onChange, className, selectStyleName
         htmlFor={id}
         className={classNames(styles.radioBtnLabel, { [styles.checked]: checked })}
       >
-        <span
-          className={classNames(styles.radioBtnText, styles[`radioBtnText--${selectStyleName}`])}
-        >
+        <span className={classNames(styles.radioBtnText, styles[`radioBtnText--${variant}`])}>
           {label}
         </span>
       </label>

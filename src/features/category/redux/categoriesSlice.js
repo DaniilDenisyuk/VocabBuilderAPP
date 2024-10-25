@@ -26,7 +26,7 @@ const categoriesSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        console.log('Categories loaded successfully:', action.payload);
+        // console.log('Categories loaded successfully:', action.payload);
 
         state.status = 'succeeded';
         state.categories = action.payload;

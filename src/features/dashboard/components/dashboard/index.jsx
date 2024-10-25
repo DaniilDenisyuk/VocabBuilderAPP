@@ -34,7 +34,7 @@ export default function Dashboard({ className, onClose }) {
             selectedVerbType={selectedVerbType}
             onChange={handleVerbTypeChange}
             className={classNames(styles.radioBtnContainer)}
-            selectStyleName="modal"
+            variant="modal"
           />
         )}
       </div>
