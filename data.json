@@ -61,8 +61,8 @@
     "ua": "Розвиватися",
     "category": "Verb",
     "progress": 0,
-    "isRegular": true,
-    "isIrregular": false,
+    "Regular": true,
+    "Irregular": false,
     "editDelete": "Edit/Delete"
   },
   {
@@ -79,7 +79,7 @@
     "ua": "Турбота, догляд",
     "category": "Verb",
     "progress": 100,
-    "isRegular": true,
+    "Regular": true,
     "isIrregular": false,
     "editDelete": "Edit/Delete"
   },
@@ -121,7 +121,7 @@
     "ua": "Приносити",
     "category": "Verb",
     "progress": 0,
-    "isRegular": false,
+    "Regular": false,
     "isIrregular": true,
     "editDelete": "Edit/Delete"
   },
@@ -131,7 +131,7 @@
     "ua": "Знати",
     "category": "Verb",
     "progress": 0,
-    "isRegular": false,
+    "Regular": false,
     "isIrregular": true,
     "editDelete": "Edit/Delete"
   }
