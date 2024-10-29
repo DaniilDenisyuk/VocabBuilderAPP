@@ -1,64 +1,100 @@
+import { useNavigate } from 'react-router-dom';
+import { useSignUpMutation } from '../../../infrastructure/api/redux/apiSlice';
+import styles from './index.module.scss';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import styles from './index.module.scss';
 import authSchema from '../../../infrastructure/utils/authSchema';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../redux/authSlice';
 
-const RegisterForm = ({ onSubmit }) => {
+const RegisterForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [signup, { isLoading, isError, error }] = useSignUpMutation();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    resolver: yupResolver(authSchema),
-    mode: 'onChange',
-  });
+    formState: { errors },
+  } = useForm({ resolver: joiResolver(authSchema('register')) });
 
   const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
 
-  const togglePasswordVisibility = () => setShowPassword(prev => !prev);
-
-  const submitHandler = async data => {
+  const onSubmit = async data => {
     try {
-      await onSubmit(data);
+      const response = await signup(data).unwrap();
+      if (response.token) {
+        dispatch(setToken(response.token));
+        navigate('/login');
+        console.log('User registered successfully:', response.token);
+      }
     } catch (error) {
-      error.message('Registration failed. Please try again.');
+      console.error('Registration failed:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
-      <label className={styles.field}>
-        <input type="text" placeholder="Name" {...register('name')} />
-        {errors.name && <p className={styles.validation_error}>{errors.name.message}</p>}
-      </label>
-      <label className={styles.field}>
-        <input type="email" placeholder="Email" {...register('email')} />
-        {errors.email && <p className={styles.validation_error}>{errors.email.message}</p>}
-      </label>
-      <label className={styles.field} style={{ position: 'relative' }}>
-        <input
-          type={showPassword ? 'text' : 'password'}
-          placeholder="Password"
-          {...register('password')}
-        />
-        <FontAwesomeIcon
-          icon={showPassword ? faEye : faEyeSlash}
-          onClick={togglePasswordVisibility}
-          className={styles.password_icon}
-        />
-        {errors.password && <p className={styles.validation_error}>{errors.password.message}</p>}
-      </label>
-      <button
-        type="submit"
-        className={`${styles.button} ${isValid ? styles.active_button : styles.inactive_button}`}
-        disabled={!isValid}
-      >
-        Register
-      </button>
-    </form>
+    <div className={styles.form_container}>
+      <h2>Register</h2>
+      <p className={styles.subtitle}>
+        To start using our services, please fill out the registration form below. All fields are
+        mandatory:
+      </p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label className={styles.field}>
+          <input type="text" id="name" placeholder="Name" {...register('name')} />
+          {errors.name && <p className={styles.validation_error}>{errors.name.message}</p>}
+        </label>
+        <label className={styles.field}>
+          <input type="text" id="email" placeholder="Email" {...register('email')} />
+          {errors.email && <p className={styles.validation_error}>{errors.email.message}</p>}
+        </label>
+        <label className={styles.field}>
+          <input
+            className={styles.fieldPassword}
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            placeholder="Password"
+            {...register('password')}
+          />
+          <FontAwesomeIcon
+            className={styles.passwordIcon}
+            icon={showPassword ? faEye : faEyeSlash}
+            onClick={togglePasswordVisibility}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              cursor: 'pointer',
+            }}
+          />
+          {errors.password && <p className={styles.validation_error}>{errors.password.message}</p>}
+        </label>
+        {/* <button type="submit" className={`${styles.button} ${styles.active_button}`}>
+          Register
+        </button> */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`${styles.button} ${styles.active_button}`}
+        >
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
+        {isError && (
+          <p style={{ color: 'red' }}>Error: {error?.data?.message || 'Something went wrong'}</p>
+        )}
+      </form>
+      <p className={styles.linkText}>
+        <a href="/login">Log in</a>
+      </p>
+    </div>
   );
 };
 

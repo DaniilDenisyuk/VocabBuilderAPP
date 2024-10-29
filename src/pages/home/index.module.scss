@@ -1,6 +1,7 @@
-@use '../../index.scss';
+//@import '../../index.scss';
+@use '../../index' as *;
 
-.home_container {
+.homeContainer {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -12,7 +13,7 @@
   overflow: hidden;
 }
 
-.gradient_background {
+.gradientBackground {
   position: absolute;
   width: 693px;
   height: 597px;
@@ -27,32 +28,32 @@
   z-index: -1;
 }
 
-.home_container_img,
-.authform_container {
+.homeContainerImg,
+.authformContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.home_container_img img {
+.homeContainerImg img {
   max-width: 100%;
   height: auto;
   object-fit: cover;
 }
 
 @media (max-width: 767px) {
-  .home_container {
+  .homeContainer {
     padding: 114px 16px 14px 16px;
     flex-direction: row;
   }
 
-  .home_container_img,
-  .authform_container {
+  .homeContainerImg,
+  .authformContainer {
     width: 100%;
   }
 
-  .gradient_background {
+  .gradientBackground {
     width: 120%;
     height: 120%;
     right: -10%;
@@ -61,35 +62,35 @@
 }
 
 @media (min-width: 768px) {
-  .home_container {
+  .homeContainer {
     flex-direction: row;
     padding: 34px 50px;
     gap: 40px;
   }
 
-  .home_container_img,
-  .authform_container {
+  .homeContainerImg,
+  .authformContainer {
     width: 50%;
   }
 
-  .gradient_background {
+  .gradientBackground {
     right: -30%;
     bottom: -30%;
   }
 }
 
 @media (min-width: 1440px) {
-  .home_container {
+  .homeContainer {
     padding: 64px 100px;
     gap: 80px;
   }
 
-  .home_container_img,
-  .authform_container {
+  .homeContainerImg,
+  .authformContainer {
     width: 50%;
   }
 
-  .home_container_img {
+  .homeContainerImg {
     display: flex;
     flex-direction: column;
     width: auto;
@@ -97,13 +98,13 @@
     position: relative;
   }
 
-  .home_container_img img {
+  .homeContainerImg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .gradient_background {
+  .gradientBackground {
     right: -10%;
     bottom: -25%;
     width: 120%;

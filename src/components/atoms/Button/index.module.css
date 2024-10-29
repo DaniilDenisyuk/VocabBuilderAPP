@@ -1,1 +1,2 @@
-@use '../../../index.scss';
+//@import '../../../index.scss';
+@use '../../../index' as *;

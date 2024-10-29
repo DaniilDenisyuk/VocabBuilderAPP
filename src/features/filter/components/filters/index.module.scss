@@ -1,7 +1,9 @@
-@use '../../../../index.scss';
+//@import '../../../../index.scss';
+@use '../../../../index.scss' as *;
 .filterContainer {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   gap: 8px;
   margin-top: 80px;
   margin-bottom: 28px;

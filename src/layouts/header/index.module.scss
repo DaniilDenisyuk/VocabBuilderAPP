@@ -1,4 +1,5 @@
-@use '../../index.scss';
+//@import '../../index.scss';
+@use '../../index' as *;
 .header {
   display: flex;
   align-items: center;

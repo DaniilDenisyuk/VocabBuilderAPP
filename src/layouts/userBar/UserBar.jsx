@@ -1,17 +1,16 @@
 import { MdArrowRightAlt } from 'react-icons/md';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import sprite from '../../assets/icons/sprite.svg';
 import styles from './index.module.scss';
-import { logout } from '../../features/auth/redux/authOperations';
+import { useSignOutMutation } from '../../infrastructure/api/redux/apiSlice';
 
 const UserBar = ({ user }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [signOut] = useSignOutMutation();
 
   const handleLogout = async () => {
     try {
-      await dispatch(logout());
+      await signOut().unwrap();
       navigate('/');
     } catch (error) {
       console.error('Logout failed', error);

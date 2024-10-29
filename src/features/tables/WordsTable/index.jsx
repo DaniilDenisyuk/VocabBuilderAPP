@@ -9,48 +9,49 @@ import ProgressBar from '../../../layouts/progressBar/ProgressBar';
 import DictionaryActionCell from '../../dictionary/components/DictionaryActionCell';
 import { useMemo } from 'react';
 
-const WordsTable = ({ onEdit, onDelete, filteredWords }) => {
+const createColumns = (onEdit, onDelete) => {
   const columnHelper = createColumnHelper();
-  const columns = useMemo(
-    () => [
-      columnHelper.display({
-        id: 'number',
-        header: () => '№',
-        cell: ({ row }) => row.index + 1,
-      }),
-      columnHelper.accessor('en', {
-        id: 'word',
-        header: () => 'Word',
-        cell: info => info.getValue(),
-      }),
-      columnHelper.accessor('ua', {
-        id: 'translation',
-        header: () => 'Translation',
-        cell: info => info.getValue(),
-      }),
-      columnHelper.accessor('category', {
-        id: 'category',
-        header: () => 'Category',
-        cell: info => info.getValue(),
-      }),
-      columnHelper.accessor('progress', {
-        id: 'progress',
-        header: () => 'Progress',
-        cell: info => (
-          <div className={styles.progressContainer}>
-            {`${info.getValue()}%`}
-            <ProgressBar progress={info.getValue()} />
-          </div>
-        ),
-      }),
-      columnHelper.display({
-        id: 'actions',
-        header: () => '',
-        cell: ({ row }) => <DictionaryActionCell row={row} onEdit={onEdit} onDelete={onDelete} />,
-      }),
-    ],
-    []
-  );
+  return [
+    columnHelper.display({
+      id: 'number',
+      header: () => '№',
+      cell: ({ row }) => row.index + 1,
+    }),
+    columnHelper.accessor('en', {
+      id: 'word',
+      header: () => 'Word',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('ua', {
+      id: 'translation',
+      header: () => 'Translation',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('category', {
+      id: 'category',
+      header: () => 'Category',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('progress', {
+      id: 'progress',
+      header: () => 'Progress',
+      cell: info => (
+        <div className={styles.progressContainer}>
+          {`${info.getValue()}%`}
+          <ProgressBar progress={info.getValue()} />
+        </div>
+      ),
+    }),
+    columnHelper.display({
+      id: 'actions',
+      header: () => '',
+      cell: ({ row }) => <DictionaryActionCell row={row} onEdit={onEdit} onDelete={onDelete} />,
+    }),
+  ];
+};
+
+const WordsTable = ({ onEdit, onDelete, filteredWords }) => {
+  const columns = useMemo(() => createColumns(onEdit, onDelete), [onEdit, onDelete]);
 
   const table = useReactTable({
     data: filteredWords,

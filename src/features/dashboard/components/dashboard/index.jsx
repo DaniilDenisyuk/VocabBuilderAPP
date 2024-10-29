@@ -5,38 +5,34 @@ import AddWordFormModal from '../addWordFormModal/AddWordFormModal';
 import ModalProvider from '../../../../infrastructure/modal/components/ModalProvider';
 import ModalTrigger from '../../../../infrastructure/modal/components/ModalTrigger';
 import Filters from '../../../filter/components/filters/Filters';
+import { selectFilteredWords, setSelectedCategory } from '../../../filter/redux/filtersSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useEffect, useState } from 'react';
-import { fetchCategories } from '../../../category/redux/categoriesSlice';
-import { setSelectedVerbType, selectSelectedVerbType } from '../../../filter/redux/filtersSlice';
-import VerbTypeSwitch from '../../../category/components/VerbTypeSwitch';
+import { useCallback, useEffect } from 'react';
+import { useGetWordsAllQuery } from '../../../../infrastructure/api/redux/apiSlice';
+import { setWords } from '../../../dictionary/redux/wordsSlice';
 
 export default function Dashboard({ className, onClose }) {
   const dispatch = useDispatch();
-  const selectedVerbType = useSelector(selectSelectedVerbType);
-  const [showVerbOptions] = useState(false);
-
+  const filteredWords = useSelector(selectFilteredWords);
+  const { data: words, error, isLoading } = useGetWordsAllQuery();
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    if (words) {
+      dispatch(setWords(words));
+    }
+  }, [words, dispatch]);
 
-  const handleVerbTypeChange = useCallback(
-    e => dispatch(setSelectedVerbType(e.target.value)),
+  const handleCategoryChange = useCallback(
+    category => {
+      dispatch(setSelectedCategory(category));
+    },
     [dispatch]
   );
-
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading words!</div>;
   return (
     <div className={classNames(styles.dashboard, className)}>
       <div className={styles.dashboardLeft}>
-        <Filters />
-        {showVerbOptions && (
-          <VerbTypeSwitch
-            selectedVerbType={selectedVerbType}
-            onChange={handleVerbTypeChange}
-            className={classNames(styles.radioBtnContainer)}
-            variant="modal"
-          />
-        )}
+        <Filters filteredWords={filteredWords} onCategoryChange={handleCategoryChange} />
       </div>
       <div className={styles.dashboardRight}>
         <ModalProvider>

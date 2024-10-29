@@ -4,24 +4,15 @@ import styles from './index.module.scss';
 const UserNav = () => {
   return (
     <nav className={styles.nav}>
-      <NavLink
-        to="/dictionary"
-        className={({ isActive }) => (isActive ? styles.active : styles.link)}
-      >
-        Dictionary
-      </NavLink>
-      <NavLink
-        to="/recommend"
-        className={({ isActive }) => (isActive ? styles.active : styles.link)}
-      >
-        Recommend
-      </NavLink>
-      <NavLink
-        to="/training"
-        className={({ isActive }) => (isActive ? styles.active : styles.link)}
-      >
-        Training
-      </NavLink>
+      {['/dictionary', '/recommend', '/training'].map(path => (
+        <NavLink
+          key={path}
+          to={path}
+          className={({ isActive }) => (isActive ? styles.active : styles.link)}
+        >
+          {path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
+        </NavLink>
+      ))}
     </nav>
   );
 };

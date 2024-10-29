@@ -10,7 +10,7 @@ const authSchema = formType => {
         : Joi.string().allow(''),
 
     email: Joi.string()
-      .email({ tlds: { allow: ['com', 'net', 'org'] } }) // Перевірка на TLD
+      .email({ tlds: { allow: ['com', 'net', 'org'] } })
       .pattern(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)
       .required()
       .messages({
