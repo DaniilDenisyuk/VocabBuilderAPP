@@ -8,7 +8,7 @@ const ProgressBar = ({ progress }) => {
   const strokeDashoffset = circumference - (normalizedProgress / 100) * circumference;
 
   return (
-    <div className={styles.progress_bar}>
+    <div className={styles.progressBar}>
       <svg
         width={radius * 2 + strokeWidth}
         height={radius * 2 + strokeWidth}

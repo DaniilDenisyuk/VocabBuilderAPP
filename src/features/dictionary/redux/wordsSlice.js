@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addWord, deleteWord, fetchWords, updateWord } from './wordsOperations';
 
 const initialState = {
   words: [],
@@ -14,50 +13,16 @@ const wordsSlice = createSlice({
     setWords: (state, action) => {
       state.words = action.payload;
     },
-  },
-  extraReducers: builder => {
-    const handlePending = state => {
-      state.loading = true;
-      state.error = null;
-    };
-
-    const handleRejected = (state, action) => {
-      state.loading = false;
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
       state.error = action.payload;
-    };
-
-    builder
-      .addCase(fetchWords.pending, handlePending)
-      .addCase(fetchWords.fulfilled, (state, action) => {
-        state.words = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchWords.rejected, handleRejected)
-      .addCase(addWord.pending, handlePending)
-      .addCase(addWord.fulfilled, (state, action) => {
-        state.words.push(action.payload);
-        state.loading = false;
-      })
-      .addCase(addWord.rejected, handleRejected)
-      .addCase(updateWord.pending, handlePending)
-      .addCase(updateWord.fulfilled, (state, action) => {
-        const index = state.words.findIndex(word => word.id === action.payload.id);
-        if (index !== -1) {
-          state.words[index] = action.payload;
-        }
-        state.loading = false;
-      })
-      .addCase(updateWord.rejected, handleRejected)
-      .addCase(deleteWord.pending, handlePending)
-      .addCase(deleteWord.fulfilled, (state, action) => {
-        state.words = state.words.filter(word => word.id !== action.payload);
-        state.loading = false;
-      })
-      .addCase(deleteWord.rejected, handleRejected);
+    },
   },
 });
 
-export const { setWords } = wordsSlice.actions;
+export const { setWords, setLoading, setError } = wordsSlice.actions;
 
 export default wordsSlice.reducer;
 

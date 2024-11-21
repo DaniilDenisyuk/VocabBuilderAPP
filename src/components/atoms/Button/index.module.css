@@ -1,1 +1,3 @@
-@use '../../../index.scss';
+//@use
+ '../../../index.scss';
+@use '../../../index' as *;

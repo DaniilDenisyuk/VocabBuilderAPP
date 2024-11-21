@@ -4,86 +4,82 @@ import { useState, useEffect } from 'react';
 import imgTitleRegisterWebP from '../../assets/img/illustration1x.webp';
 import imgTitleRegister2xWebP from '../../assets/img/illustration2x.webp';
 import imgTitleRegister from '../../assets/img/illustration2x.png';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import AuthForm from '../../features/auth/components/AuthForm';
-import { login, register } from '../../features/auth/redux/authOperations';
+import { useSignInMutation, useSignUpMutation } from '../../infrastructure/api/redux/apiSlice';
+import RegisterForm from '../../features/auth/components/RegisterForm';
+import LoginForm from '../../features/auth/components/LoginForm';
 
 const Home = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [activeForm, setActiveForm] = useState('register');
-  const [hasVisited, setHasVisited] = useState(false);
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const [activeForm, setActiveForm] = useState('register');
+  const [signUp, { isLoading: isSignUp, error: signUpError }] = useSignUpMutation();
+  const [signIn, { isLoading: isSignIn, error: signInError }] = useSignInMutation();
 
   useEffect(() => {
-    const visited = localStorage.getItem('hasVisited');
-    if (visited) {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (hasVisited) {
       setActiveForm('login');
     } else {
       localStorage.setItem('hasVisited', 'true');
     }
-    setHasVisited(true);
   }, []);
 
   useEffect(() => {
-    if (hasVisited && isAuthenticated) {
+    if (isAuthenticated) {
       navigate('/dictionary');
     }
-  }, [isAuthenticated, hasVisited, navigate]);
+  }, [isAuthenticated, navigate]);
 
-  const handleRegister = data => {
-    dispatch(register(data))
-      .then(() => {
+  const handleAuth = async data => {
+    try {
+      if (activeForm === 'register') {
+        await signUp(data).unwrap();
         setActiveForm('login');
-      })
-      .catch(error => {
-        console.error('Registration error:', error);
-      });
-  };
-
-  const handleLogin = data => {
-    dispatch(login(data))
-      .then(() => {
+      } else {
+        await signIn(data).unwrap();
         navigate('/dictionary');
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-      });
+      }
+    } catch (error) {
+      console.error(`${activeForm === 'register' ? 'Registration' : 'Login'} error:`, error);
+    }
   };
-  return (
-    <div className={styles.home_container}>
-      <div className={styles.gradient_background}></div>
-      <div className={styles.home_container_form}>
-        <AuthForm
-          title={activeForm === 'register' ? 'Register' : 'Login'}
-          supportingText={
-            activeForm === 'register'
-              ? 'To start using our services, please fill out the registration form below. All fields are mandatory:'
-              : 'Please enter your login details to continue using our service:'
-          }
-          fields={activeForm === 'register' ? ['name', 'email', 'password'] : ['email', 'password']}
-          onSubmit={activeForm === 'register' ? handleRegister : handleLogin}
-          linkPath={activeForm === 'register' ? '/login' : '/register'}
-          activeForm={activeForm}
-          setActiveForm={setActiveForm}
-        />
-      </div>
 
-      <div className={styles.home_container_img}>
-        <picture>
-          <source
-            srcSet={`${imgTitleRegisterWebP} 1x, ${imgTitleRegister2xWebP} 2x`}
-            type="image/webp"
-          />
-          <source srcSet={`${imgTitleRegister} 1x`} type="image/png" />
-          <img src={imgTitleRegister} alt="user register" className={styles.responsive_image} />
-        </picture>
-        <div>
-          <p>Word · Translation · Grammar · Progress</p>
+  return (
+    <>
+      <div className={styles.gradientBackground}></div>
+      <div className={styles.homeContainer}>
+        <div className={styles.homeContainerForm}>
+          {activeForm === 'register' ? (
+            <RegisterForm
+              onSubmit={data => handleAuth(data, true)}
+              error={signUpError}
+              isLoading={isSignUp}
+            />
+          ) : (
+            <LoginForm
+              onSubmit={data => handleAuth(data, false)}
+              error={signInError}
+              isLoading={isSignIn}
+            />
+          )}
+        </div>
+        <div className={styles.homeContainerImg}>
+          <picture>
+            <source
+              srcSet={`${imgTitleRegisterWebP} 1x, ${imgTitleRegister2xWebP} 2x`}
+              type="image/webp"
+            />
+            <source srcSet={`${imgTitleRegister} 1x`} type="image/png" />
+            <img src={imgTitleRegister} alt="user register" className={styles.responsiveImage} />
+          </picture>
+          <div>
+            <p>Word · Translation · Grammar · Progress</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

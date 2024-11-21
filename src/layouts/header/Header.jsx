@@ -1,28 +1,28 @@
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import Logo from '../logo/Logo.jsx';
-import UserBar from '../userBar/UserBar.jsx';
 import UserNav from '../userNav/UserNav';
-import useAuth from '../../infrastructure/hooks/useAuth';
+import { useGetCurrentUserQuery } from '../../infrastructure/api/redux/apiSlice';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, isLogin, isRefreshing } = useAuth();
+  const { data: user, isError, error } = useGetCurrentUserQuery();
 
   useEffect(() => {
-    // console.log('User data:', user);
-    // console.log('Is user logged in:', isLogin);
-    // console.log('Is Refreshing:', isRefreshing);
-  }, [user, isLogin, isRefreshing]);
+    if (isError) {
+      console.error('Failed to fetch user data', error.status, error.data);
+    } else if (user) {
+      console.log('Fetched user:', user);
+    }
+  }, []);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(prev => !prev);
   };
 
   return (
     <header className={styles.header}>
       <Logo />
-      {/* {isLogin && !isRefreshing && user ? ( */}
       <div className={styles.authenticated}>
         <div className={`${styles.menu} ${menuOpen ? styles.open : ''}`}>
           <div className={styles.nav_menu}>
@@ -32,12 +32,10 @@ const Header = () => {
         <div className={styles.desktopMenu}>
           <UserNav />
         </div>
-        <UserBar user={user} className={styles.user_info} />
         <button className={styles.burgerMenu} onClick={toggleMenu}>
           ☰
         </button>
       </div>
-      {/* ) : null} */}
     </header>
   );
 };

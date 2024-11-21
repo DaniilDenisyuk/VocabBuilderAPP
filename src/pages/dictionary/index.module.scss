@@ -1,4 +1,5 @@
-@use '../../index.scss';
+//Dictionary.scss
+@use '../../index' as *;
 
 .dictionaryPage {
   display: flex;
@@ -7,18 +8,15 @@
   width: 100%;
   max-width: 1440px;
   min-height: 100vh;
-  background: #f8f8f8;
+  background: var(--color-gray-light);
   margin: 0;
+  padding: 16px;
 
-  @media (max-width: 374px) {
-    padding: 16px;
-  }
-
-  @media (min-width: 375px) and (max-width: 767px) {
+  @media (min-width: 375px) {
     padding: 20px;
   }
 
-  @media (min-width: 768px) and (max-width: 1439px) {
+  @media (min-width: 768px) {
     padding: 24px;
   }
 

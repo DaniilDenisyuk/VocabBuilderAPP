@@ -21,12 +21,12 @@ export const trimObjStrValues = (obj, keys) => {
   // return trimmedObj;
 };
 
-export default function TestTrim() {
-  const str1 = { arr: [1, 2, 3], age: 35, name: '   Serg  ', city: '  Lviv' };
-  const str2 = { name: '   Ann  ', age: 45, job: 'Developer   ' };
+// export default function TestTrim() {
+//   const str1 = { arr: [1, 2, 3], age: 35, name: '   Serg  ', city: '  Lviv' };
+//   const str2 = { name: '   Ann  ', age: 45, job: 'Developer   ' };
 
-  console.log('trimmedStr1: ', trimObjStrValues(str1));
-  console.log('trimmedStr2: ', trimObjStrValues(str2, ['name']));
-  console.log('trimmedStr2: ', trimObjStrValues(str2, ['age', 'job']));
-}
-TestTrim();
+//   console.log('trimmedStr1: ', trimObjStrValues(str1));
+//   console.log('trimmedStr2: ', trimObjStrValues(str2, ['name']));
+//   console.log('trimmedStr2: ', trimObjStrValues(str2, ['age', 'job']));
+// }
+// TestTrim();

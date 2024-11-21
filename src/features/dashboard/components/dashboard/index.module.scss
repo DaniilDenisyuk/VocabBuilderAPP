@@ -1,4 +1,4 @@
-@use '../../../../index.scss';
+@use '../../../../index.scss' as *;
 
 .dashboard {
   display: flex;
@@ -25,8 +25,14 @@
 
 .dashboardLeft {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
+
+  @media (max-width: 374px) {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .dashboardRight {
