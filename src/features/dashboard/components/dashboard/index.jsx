@@ -13,6 +13,7 @@ import { setWords } from '../../../dictionary/redux/wordsSlice';
 
 export default function Dashboard({ className, onClose }) {
   const dispatch = useDispatch();
+
   const filteredWords = useSelector(selectFilteredWords);
   const { data: words, error, isLoading } = useGetWordsAllQuery();
   useEffect(() => {

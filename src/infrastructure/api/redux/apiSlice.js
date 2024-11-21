@@ -134,6 +134,45 @@ export const apiSlice = createApi({
         body: answers,
       }),
     }),
+    //pagination
+    // getWordPaginated: builder.query({
+    //   query: params => {
+    //     console.log('Fetching paginated words with params:', params);
+    //     return {
+    //       url: `/words/all`,
+    //       method: 'GET',
+    //       params,
+    //     };
+    //   },
+    // }),
+    getWordAllPaginated: builder.query({
+      query: ({ page, limit, keyword, category, isIrregular }) => {
+        console.log('Fetching all paginated words with params:', {
+          page,
+          limit,
+          keyword,
+          category,
+          isIrregular,
+        });
+        return {
+          url: '/words/all',
+          method: 'GET',
+          params: { page, limit, keyword, category, isIrregular },
+        };
+      },
+    }),
+
+    //training
+    fetchTasks: builder.query({
+      query: () => '/words/tasks',
+    }),
+    saveUserAnswers: builder.mutation({
+      query: answers => ({
+        url: '/words/answers',
+        method: 'POST',
+        body: answers,
+      }),
+    }),
   }),
 });
 
@@ -153,4 +192,8 @@ export const {
   useGetUserStatisticsQuery,
   useGetUserTasksQuery,
   usePostAnswersMutation,
+  // useGetWordPaginatedQuery,
+  useFetchTasksQuery,
+  useSaveUserAnswersMutation,
+  useGetWordAllPaginatedQuery,
 } = apiSlice;

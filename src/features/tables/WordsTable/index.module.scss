@@ -1,4 +1,4 @@
-//@import '../../../index.scss';
+//WordsTable.scss
 @use '../../../index' as *;
 
 .tableContainer {
@@ -47,8 +47,9 @@ tbody td {
 
 .progressContainer {
   display: flex;
+  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
   font-size: 14px;
   color: #555;
 }

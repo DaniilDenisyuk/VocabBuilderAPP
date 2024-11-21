@@ -8,11 +8,12 @@ import RegisterForm from './features/auth/components/RegisterForm.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
 import LoginForm from './features/auth/components/LoginForm.jsx';
 import { useGetCurrentUserQuery } from './infrastructure/api/redux/apiSlice.js';
+import Training from './pages/training/Training.jsx';
+import TestPage from './infrastructure/testing/components/TestPage.jsx';
 
 const Home = lazy(() => import('./pages/home/Home.jsx'));
 const Dictionary = lazy(() => import('./pages/dictionary/Dictionary.jsx'));
 const Recommend = lazy(() => import('./pages/recommend/Recommend.jsx'));
-const Training = lazy(() => import('./pages/training/Training.jsx'));
 
 const App = () => {
   const token = localStorage.getItem('token');
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/training" element={<Training />} />
               <Route path="/register" element={<RegisterForm />} />
               <Route path="/login" element={<LoginForm />} />
+              <Route path="/testing" element={<TestPage />} />
             </Route>
           </Routes>
         </Suspense>

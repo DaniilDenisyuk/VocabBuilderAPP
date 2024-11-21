@@ -1,32 +1,38 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import localAPI from '../../../infrastructure/api/localAPI';
+import { apiSlice } from '../../../infrastructure/api/redux/apiSlice';
 
-export const fetchWords = createAsyncThunk('words/fetchWords', async (_, { rejectWithValue }) => {
-  try {
-    const words = await localAPI.getWords();
-    return words;
-  } catch (error) {
-    return rejectWithValue(error.message);
+export const fetchWords = createAsyncThunk(
+  'words/fetchWords',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const result = await dispatch(apiSlice.endpoints.getWordsAll.initiate());
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
-export const addWord = createAsyncThunk('words/addWord', async (wordData, { rejectWithValue }) => {
-  try {
-    const newIdWord = { ...wordData, id: uuidv4(), progress: 0 };
-    const newWord = await localAPI.addWord(newIdWord);
-    return newWord;
-  } catch (error) {
-    return rejectWithValue(error.message);
+export const addWord = createAsyncThunk(
+  'words/addWord',
+  async (wordData, { dispatch, rejectWithValue }) => {
+    try {
+      const newIdWord = { ...wordData, id: uuidv4(), progress: 0 };
+      const result = await dispatch(apiSlice.endpoints.createWord.initiate(newIdWord));
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const updateWord = createAsyncThunk(
   'words/updateWord',
-  async (wordData, { rejectWithValue }) => {
+  async (wordData, { dispatch, rejectWithValue }) => {
     try {
-      const updatedWord = await localAPI.updateWord(wordData);
-      return updatedWord;
+      const result = await dispatch(apiSlice.endpoints.editWord.initiate(wordData));
+      return result.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -35,12 +41,50 @@ export const updateWord = createAsyncThunk(
 
 export const deleteWord = createAsyncThunk(
   'words/deleteWord',
-  async (wordId, { rejectWithValue }) => {
+  async (wordId, { dispatch, rejectWithValue }) => {
     try {
-      await localAPI.deleteWord(wordId);
+      await dispatch(apiSlice.endpoints.deleteWord.initiate(wordId));
       return wordId;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
+
+const wordsSlice = createSlice({
+  name: 'words',
+  initialState: {
+    items: [],
+    status: 'idle',
+    error: null,
+  },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(fetchWords.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(fetchWords.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(fetchWords.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(addWord.fulfilled, (state, action) => {
+        state.items.push(action.payload);
+      })
+      .addCase(updateWord.fulfilled, (state, action) => {
+        const index = state.items.findIndex(word => word.id === action.payload.id);
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        }
+      })
+      .addCase(deleteWord.fulfilled, (state, action) => {
+        state.items = state.items.filter(word => word.id !== action.payload);
+      });
+  },
+});
+
+export default wordsSlice.reducer;

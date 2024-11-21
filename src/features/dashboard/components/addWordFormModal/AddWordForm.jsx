@@ -3,32 +3,36 @@ import Joi from 'joi';
 import classNames from 'classnames';
 import { joiResolver } from '@hookform/resolvers/joi';
 import styles from './index.module.scss';
-import { trimObjStrValues } from '../../../../infrastructure/testing/tasks';
 import {
-  useAddWordMutation,
   useCreateWordMutation,
-  useGetWordsAllQuery,
   useGetWordsCategoriesQuery,
 } from '../../../../infrastructure/api/redux/apiSlice';
-import CategoriesSelector from '../../../category/components';
+import CategoryAndVerbTypeSelector from '../../../category/components';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../../../infrastructure/store/notificationSlice';
 
-export default function AddWordForm({ onClose, className, isCreating }) {
+export default function AddWordForm({ onClose, className, refetchTable }) {
+  const dispatch = useDispatch();
+
   const defaultValues = {
     en: '',
     ua: '',
     category: '',
-    verbType: 'Regular',
+    verbType: '',
   };
 
   const schema = Joi.object({
     en: Joi.string()
       .pattern(/\b[A-Za-z'-]+(?:\s+[A-Za-z'-]+)*\b/)
+      .trim()
       .required()
       .messages({
         'string.pattern.base': 'Invalid English word',
       }),
     ua: Joi.string()
       .pattern(/^(?![A-Za-z])[А-ЯІЄЇҐґа-яієїʼ\s]+$/u)
+      .trim()
       .required()
       .messages({
         'string.pattern.base': 'Invalid Ukrainian word',
@@ -36,51 +40,59 @@ export default function AddWordForm({ onClose, className, isCreating }) {
     category: Joi.string().required().messages({
       'any.required': 'Please select a category',
     }),
-    verbType: Joi.string().valid('Regular', 'Irregular').optional(),
+    verbType: Joi.string()
+      .valid('Regular', 'Irregular')
+      .when('category', {
+        is: 'verb',
+        then: Joi.required().messages({
+          'any.required': 'Please select verb type (Regular or Irregular)',
+        }),
+        otherwise: Joi.optional(),
+      }),
   });
 
   const methods = useForm({
     defaultValues,
     resolver: joiResolver(schema),
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   const { errors } = methods.formState;
   const { data: categories = [], isLoading, isError } = useGetWordsCategoriesQuery();
-  const { data } = useGetWordsAllQuery();
-  const { results: words = [] } = data || [];
 
   const [createWord] = useCreateWordMutation();
-  const [addWord] = useAddWordMutation();
 
+  const handleCategoryChange = useCallback(
+    category => {
+      methods.setValue('category', category);
+      if (category !== 'verb') {
+        methods.setValue('verbType', 'Regular');
+      }
+    },
+    [methods]
+  );
+
+  const handleVerbTypeChange = useCallback(
+    verbType => {
+      methods.setValue('verbType', verbType);
+    },
+    [methods]
+  );
   const onSubmit = async data => {
-    const trimmedData = trimObjStrValues(data);
-    const existingWord = words.find(
-      word => word.en === trimmedData.en || word.ua === trimmedData.ua
-    );
+    const { category, verbType, ...restData } = data;
 
-    if (existingWord) {
-      const message =
-        existingWord.en === trimmedData.en ? 'Word already exists' : 'Word already exists';
-      methods.setError(existingWord.en === trimmedData.en ? 'en' : 'ua', {
-        type: 'manual',
-        message,
-      });
-      return;
+    if (category === 'verb') {
+      restData.isIrregular = verbType === 'Irregular';
     }
-
     try {
-      isCreating ? await createWord(data).unwrap() : await addWord(data).unwrap();
+      await createWord(restData).unwrap();
       methods.reset();
-      onClose();
+      onClose?.();
+      refetchTable?.();
     } catch (error) {
       console.error('Error adding word:', error);
-    }
-  };
-
-  const handleCategoryChange = category => {
-    methods.setValue('category', category);
-    if (category !== 'verb') {
-      methods.setValue('verbType', 'Regular');
+      dispatch(showNotification({ message: 'Error adding word: ' + error.message, type: 'error' }));
     }
   };
 
@@ -97,11 +109,11 @@ export default function AddWordForm({ onClose, className, isCreating }) {
         ) : (
           categories.length > 0 && (
             <div>
-              <CategoriesSelector
+              <CategoryAndVerbTypeSelector
                 selectedCategory={methods.watch('category')}
-                selectedVerbType={methods.watch('verbType')}
+                isIrregular={methods.watch('verbType')}
                 onCategoryChange={handleCategoryChange}
-                onVerbTypeChange={verbType => methods.setValue('verbType', verbType)}
+                onVerbTypeChange={handleVerbTypeChange}
                 className={styles.selector}
                 variant="modal"
               />

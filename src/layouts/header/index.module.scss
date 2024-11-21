@@ -1,5 +1,6 @@
-//@import '../../index.scss';
+//Header.scss
 @use '../../index' as *;
+
 .header {
   display: flex;
   align-items: center;
@@ -76,66 +77,3 @@
     display: flex;
   }
 }
-
-// .header {
-//   background-color: yellow;
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   background: transparent;
-//   height: 80px;
-//   // padding: 0 30px;
-//   flex: 0 0 auto;
-//   width: 100%;
-//   box-sizing: border-box;
-// }
-
-// .logoContainer {
-//   flex: 0 0 auto;
-// }
-
-// .user_info {
-//   flex: 0 0 auto;
-// }
-
-// .menu {
-//   flex: 1;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   gap: 15px;
-// }
-
-// .menuButton {
-//   background: none;
-//   border: none;
-//   color: white;
-//   cursor: pointer;
-// }
-
-// .authenticated {
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-// }
-
-// .burgerMenu {
-//   display: none;
-//   background: none;
-//   border: none;
-//   color: white;
-//   font-size: 24px;
-//   cursor: pointer;
-// }
-
-// @media (max-width: 768px) {
-//   .header {
-//     background-color: green;
-//     height: auto;
-//     // padding: 10px 20px;
-//   }
-
-//   .burgerMenu {
-//     display: block;
-//   }
-// }

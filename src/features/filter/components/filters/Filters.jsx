@@ -1,25 +1,22 @@
-//Filters.jsx
+// Filters.jsx
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CiSearch } from 'react-icons/ci';
 import {
+  selectFilters,
   selectSearchQuery,
-  selectSelectedCategory,
-  selectSelectedVerbType,
   setSearchQuery,
   setSelectedCategory,
   setSelectedVerbType,
 } from '../../redux/filtersSlice';
 import styles from './index.module.scss';
 import { debounce } from 'lodash-es';
-import CategoriesSelector from '../../../category/components';
+import CategoryAndVerbTypeSelector from '../../../category/components';
 
-export default function Filters({ onCategoryChange }) {
+export default function Filters() {
   const dispatch = useDispatch();
-
+  const { selectedCategory, selectedVerbType } = useSelector(selectFilters);
   const searchQuery = useSelector(selectSearchQuery);
-  const selectedCategory = useSelector(selectSelectedCategory);
-  const selectedVerbType = useSelector(selectSelectedVerbType);
 
   const handleSearchChange = useCallback(
     debounce(query => {
@@ -29,14 +26,19 @@ export default function Filters({ onCategoryChange }) {
   );
 
   const handleInputChange = e => {
-    const query = e.target.value;
+    const query = e.target.value.trim();
     handleSearchChange(query);
   };
 
-  const handleFilterChange = (category, verbType) => {
+  const handleCategoryChange = category => {
     dispatch(setSelectedCategory(category));
-    dispatch(setSelectedVerbType(verbType || ''));
-    onCategoryChange(category);
+    if (category !== 'verb') {
+      dispatch(setSelectedVerbType(undefined));
+    }
+  };
+
+  const handleVerbTypeChange = verbType => {
+    dispatch(setSelectedVerbType(verbType));
   };
 
   return (
@@ -51,12 +53,12 @@ export default function Filters({ onCategoryChange }) {
         />
         <CiSearch className={styles.searchIcon} />
       </div>
-      <CategoriesSelector
-        selectedCategory={selectedCategory}
-        selectedVerbType={selectedVerbType}
-        onCategoryChange={category => handleFilterChange(category || '')}
-        onVerbTypeChange={verbType => handleFilterChange(selectedCategory, verbType)}
+      <CategoryAndVerbTypeSelector
         className={styles.selector}
+        selectedCategory={selectedCategory}
+        isIrregular={selectedVerbType}
+        onCategoryChange={handleCategoryChange}
+        onVerbTypeChange={handleVerbTypeChange}
         variant="dashboard"
       />
     </div>

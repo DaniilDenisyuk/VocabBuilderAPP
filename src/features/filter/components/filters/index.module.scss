@@ -1,5 +1,5 @@
-//@import '../../../../index.scss';
 @use '../../../../index.scss' as *;
+
 .filterContainer {
   display: flex;
   flex-direction: row;
@@ -7,62 +7,19 @@
   gap: 8px;
   margin-top: 80px;
   margin-bottom: 28px;
-}
-.radioBtnInput {
-  display: none;
-}
 
-.radioBtnLabel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid rgba(133, 170, 159, 0.6);
-  background: transparent;
-  cursor: pointer;
-  position: relative;
-  box-sizing: border-box;
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+  }
 
-  &.checked {
-    border-color: #85aa9f;
-    &::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #85aa9f;
-    }
+  @media (min-width: 1440px) {
+    gap: 16px;
+    margin-top: 100px;
   }
 }
 
-.radioBtnText {
-  font-size: 16px;
-  color: #85aa9f;
-  margin-left: 16px;
-}
-
-.radioBtnInput:checked + .radioBtnLabel::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #85aa9f;
-}
-
-.radioBtnInput:checked + .radioBtnLabel {
-  border-color: #85aa9f;
-}
-// searchContainer
 .searchContainer {
   box-sizing: border-box;
   display: flex;
@@ -71,24 +28,61 @@
   align-items: center;
   padding: 12px 24px;
   gap: 8px;
-
-  width: 274px;
-  height: 48px;
-
   border: 1px solid rgba(18, 20, 23, 0.1);
   border-radius: 15px;
+  width: 100%;
+  max-height: 48px;
+  height: 100;
+
+  @media (max-width: 767px) {
+    padding: 8px 16px;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) and (max-width: 1439px) {
+    width: 60%;
+  }
+
+  @media (min-width: 1440px) {
+    width: 40%;
+    padding: 16px 32px;
+    gap: 16px;
+  }
 }
 
 .searchInput {
+  padding: 0;
+  min-width: 100px;
+  min-height: 24px;
+  width: 100%;
+  height: auto;
   border: none;
   outline: none;
   flex: 1;
   font-size: 16px;
   color: black;
+
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 1440px) {
+    font-size: 18px;
+  }
 }
 
 .searchIcon {
   color: #85aa9f;
   width: 20px;
   height: 20px;
+
+  @media (max-width: 767px) {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 1440px) {
+    width: 24px;
+    height: 24px;
+  }
 }

@@ -1,15 +1,16 @@
 import WordsTable from '../../features/tables/WordsTable';
 import Dashboard from '../../features/dashboard/components/dashboard';
 import { useSelector } from 'react-redux';
-import { selectFilteredWords } from '../../features/filter/redux/filtersSlice';
+import { selectCurrentPage, selectItemsPerPage } from '../../features/filter/redux/filtersSlice';
 
 export default function Dictionary() {
-  const filteredWords = useSelector(selectFilteredWords);
+  const currentPage = useSelector(selectCurrentPage);
+  const itemsPerPage = useSelector(selectItemsPerPage);
 
   return (
     <div>
       <Dashboard />
-      <WordsTable filteredWords={filteredWords} />
+      <WordsTable currentPage={currentPage} itemsPerPage={itemsPerPage} />
     </div>
   );
 }

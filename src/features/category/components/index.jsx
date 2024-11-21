@@ -1,45 +1,72 @@
+import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { useGetWordsCategoriesQuery } from '../../../infrastructure/api/redux/apiSlice';
 
-const CategoriesSelector = ({
+const CategoryAndVerbTypeSelector = ({
   selectedCategory,
-  selectedVerbType,
+  isIrregular,
   onCategoryChange,
   onVerbTypeChange,
-  variant = 'modal',
+  variant = 'dashboard',
+  className = '',
 }) => {
   const { data, error, isLoading } = useGetWordsCategoriesQuery();
   const categories = data || [];
 
-  const RadioButton = ({ id, value, checked, label }) => (
-    <div className={classNames(styles.radioBtnContainer, styles[`radioBtnContainer--${variant}`])}>
-      <input
-        id={id}
-        type="radio"
-        value={value}
-        checked={checked}
-        onChange={() => onVerbTypeChange(value)}
-        className={styles.radioBtnInput}
-      />
-      <label
-        htmlFor={id}
-        className={classNames(styles.radioBtnLabel, { [styles.checked]: checked })}
+  const [isIrregularState, setIsIrregularState] = useState(isIrregular);
+
+  useEffect(() => {
+    setIsIrregularState(isIrregular);
+  }, [isIrregular]);
+
+  const handleRadioChange = value => {
+    setIsIrregularState(value);
+    onVerbTypeChange(value);
+  };
+
+  const RadioButton = ({ id, value, checked, label }) => {
+    return (
+      <div
+        className={classNames(styles.radioBtnContainer, styles[`radioBtnContainer--${variant}`])}
       >
+        <input
+          id={id}
+          type="radio"
+          value={value}
+          checked={checked}
+          onChange={() => handleRadioChange(value)}
+          className={styles.radioBtnInput}
+        />
+        <label
+          htmlFor={id}
+          className={classNames(styles.radioBtnLabel, { [styles.checked]: checked })}
+        />
         <span className={classNames(styles.radioBtnText, styles[`radioBtnText--${variant}`])}>
           {label}
         </span>
-      </label>
-    </div>
-  );
+      </div>
+    );
+  };
 
-  if (isLoading) return <p>Loading categories...</p>;
-  if (error) return <p>Error loading categories</p>;
+  if (isLoading) {
+    return <p>Loading categories...</p>;
+  }
+  if (error) {
+    return <p>Error loading categories</p>;
+  }
+
   return (
-    <div className={styles.categoriesSelectorContainer}>
+    <div className={classNames(styles.categoriesSelectorContainer, className)}>
       <select
         value={selectedCategory}
-        onChange={e => onCategoryChange(e.target.value)}
+        onChange={e => {
+          onCategoryChange(e.target.value);
+          if (e.target.value !== 'verb') {
+            setIsIrregularState(false);
+            onVerbTypeChange(false);
+          }
+        }}
         className={styles.select}
       >
         <option value="">Select category</option>
@@ -51,17 +78,17 @@ const CategoriesSelector = ({
       </select>
 
       {selectedCategory === 'verb' && (
-        <div className={styles.radioBtnGroup}>
+        <div className={classNames(styles.radioBtnGroup, className)}>
           <RadioButton
             id="regular"
-            value="Regular"
-            checked={selectedVerbType === 'Regular'}
+            value={false}
+            checked={isIrregularState === false}
             label="Regular"
           />
           <RadioButton
             id="irregular"
-            value="Irregular"
-            checked={selectedVerbType === 'Irregular'}
+            value={true}
+            checked={isIrregularState === true}
             label="Irregular"
           />
         </div>
@@ -70,4 +97,4 @@ const CategoriesSelector = ({
   );
 };
 
-export default CategoriesSelector;
+export default CategoryAndVerbTypeSelector;

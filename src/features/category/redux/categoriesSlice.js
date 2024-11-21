@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import data from '../../../../data.json';
-import localAPI from '../../../infrastructure/api/localAPI';
+// import localAPI from '../../../infrastructure/api/localAPI';
+import { useDispatch } from 'react-redux';
+import { apiSlice } from '../../../infrastructure/api/redux/apiSlice';
 
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
-  const categories = await localAPI.getCategories();
-  return categories;
+  const result = await useDispatch(apiSlice.endpoints.getWordsCategories.initiate());
+  return result.data;
 });
 
 const categoriesSlice = createSlice({
@@ -12,7 +14,7 @@ const categoriesSlice = createSlice({
   initialState: {
     words: data,
     categories: [],
-    verbType: 'Regular',
+    isIrregular: false,
     status: 'idle',
     error: null,
   },

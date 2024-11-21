@@ -1,0 +1,7 @@
+//Progress.scss'
+@use '../../../index.scss' as *;
+.progressBarContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
