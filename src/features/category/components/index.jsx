@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { useGetWordsCategoriesQuery } from '../../../infrastructure/api/redux/apiSlice';
 
 const CategoryAndVerbTypeSelector = ({
   selectedCategory,
-  isIrregular,
+  // isIrregular,
   onCategoryChange,
   onVerbTypeChange,
   variant = 'dashboard',
@@ -14,15 +13,10 @@ const CategoryAndVerbTypeSelector = ({
   const { data, error, isLoading } = useGetWordsCategoriesQuery();
   const categories = data || [];
 
-  const [isIrregularState, setIsIrregularState] = useState(isIrregular);
-
-  useEffect(() => {
-    setIsIrregularState(isIrregular);
-  }, [isIrregular]);
-
   const handleRadioChange = value => {
-    setIsIrregularState(value);
+    // setIsIrregularState(value);
     onVerbTypeChange(value);
+    // onIsIrregularChange(value);
   };
 
   const RadioButton = ({ id, value, checked, label }) => {
@@ -63,7 +57,7 @@ const CategoryAndVerbTypeSelector = ({
         onChange={e => {
           onCategoryChange(e.target.value);
           if (e.target.value !== 'verb') {
-            setIsIrregularState(false);
+            // setIsIrregularState(false);
             onVerbTypeChange(false);
           }
         }}
@@ -79,18 +73,8 @@ const CategoryAndVerbTypeSelector = ({
 
       {selectedCategory === 'verb' && (
         <div className={classNames(styles.radioBtnGroup, className)}>
-          <RadioButton
-            id="regular"
-            value={false}
-            checked={isIrregularState === false}
-            label="Regular"
-          />
-          <RadioButton
-            id="irregular"
-            value={true}
-            checked={isIrregularState === true}
-            label="Irregular"
-          />
+          <RadioButton id="regular" value={false} checked={false} label="Regular" />
+          <RadioButton id="irregular" value={true} checked={true} label="Irregular" />
         </div>
       )}
     </div>

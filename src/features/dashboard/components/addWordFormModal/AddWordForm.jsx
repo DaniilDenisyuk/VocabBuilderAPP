@@ -19,7 +19,7 @@ export default function AddWordForm({ onClose, className, refetchTable }) {
     en: '',
     ua: '',
     category: '',
-    verbType: '',
+    verbType: undefined,
   };
 
   const schema = Joi.object({
