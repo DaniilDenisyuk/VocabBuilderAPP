@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { createStore } from 'redux';
+import Classes from '../school/Classes';
 
 const initialState = {
   todos: [
@@ -118,6 +119,7 @@ export default function TestPage() {
   return (
     <Provider store={store}>
       <Content />
+      <Classes />
     </Provider>
   );
 }
