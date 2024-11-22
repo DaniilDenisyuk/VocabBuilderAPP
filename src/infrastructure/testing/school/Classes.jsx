@@ -88,7 +88,7 @@ export default function Classes() {
           id: idTeach++,
           name: teachName,
         });
-      currClass.draft.teachName = '';
+      currClass.teachName = '';
     });
   }
   function handleDelTeach(classId, teachId) {
@@ -126,11 +126,9 @@ export default function Classes() {
       //клас з якого перенос
       const fromClass = draft.find(cl => cl.id === classId);
       if (!fromClass) return;
-      console.log('fromClass=', fromClass);
       //клас в який перенос
       const toClass = draft.find(cl => cl.id === toClassId);
       if (!toClass) return;
-      console.log('toClass=', toClass.className);
       //ящо обидва класи є, то
       if (fromClass && toClass) {
         //шукаю учня за його id (pupilId)
@@ -140,7 +138,7 @@ export default function Classes() {
           //з цього видаляю
           fromClass.pupils = fromClass.pupils.filter(p => p.id !== pupilId);
           //в цей вставляю
-          toClass.pupils.push(pupil);
+          toClass.pupils.push({ ...pupil, newPupilToClassId: toClassId });
         }
       }
     });
@@ -220,28 +218,39 @@ export default function Classes() {
                         </button>
 
                         <select
-                          value={cl.newPupilToClassId}
+                          value={pupil.newPupilToClassId || ''}
                           onChange={e =>
                             setClassNetwork(draft => {
                               const currClass = draft.find(item => item.id === cl.id);
                               if (currClass) {
-                                const pupilToMove = currClass.pupils.find(p => p.id === pupil.id);
-                                if (pupilToMove) {
-                                  pupil.newPupilToClassId = e.target.value;
+                                const currPupil = currClass.pupils.find(p => p.id === pupil.id);
+                                if (currPupil) {
+                                  currPupil.newPupilToClassId = Number(e.target.value);
                                 }
                               }
                             })
                           }
                         >
                           <option>Move to...</option>
-                          {classNetwork.map((el, key) => (
-                            <option key={`option-${key}`} value={el.id}>
+                          {classNetwork.map(el => (
+                            <option key={el.id} value={el.id}>
                               {el.className}
                             </option>
                           ))}
                         </select>
 
-                        <button onClick={() => handleMovePupil(cl.id, pupil.id, pupil.toClassId)}>
+                        <button
+                          onClick={() => {
+                            const currClass = classNetwork.find(item => item.id === cl.id);
+                            if (currClass) {
+                              const currPupil = currClass.pupils.find(p => p.id === pupil.id);
+                              if (currPupil && currPupil.newPupilToClassId) {
+                                handleMovePupil(cl.id, pupil.id, currPupil.newPupilToClassId);
+                                currPupil.newPupilToClassId = '';
+                              }
+                            }
+                          }}
+                        >
                           Move
                         </button>
                       </li>
