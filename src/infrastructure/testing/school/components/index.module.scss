@@ -1,0 +1,29 @@
+.listContainer {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.inputContainer {
+  margin: 15px;
+}
+.li {
+  // background: lightgreen;
+}
+.listClasses {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+
+button {
+  padding: 5px 10px;
+  margin-left: 30px;
+  cursor: pointer;
+}
+.inputContainerTeach {
+  background: lightblue;
+}
+.inputContainerPupil {
+  background: lightgrey;
+}

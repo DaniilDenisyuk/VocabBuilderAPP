@@ -1,0 +1,112 @@
+.generalList {
+  min-width: 300px;
+  // background-color: lime;
+
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 30px;
+}
+.classesGeneralContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+.allClassesListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.classesListContainer {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex: 2;
+}
+.classItem {
+  background-color: lightseagreen;
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #e0f7fa;
+  border: 1px solid #00796b;
+  border-radius: 4px;
+  cursor: grab; //
+  transition: transform 0.2s ease;
+}
+.classesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.classesList li {
+  background-color: lightseagreen;
+  color: black;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: grab;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.listClasses {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.liClasses {
+  background-color: lightseagreen;
+  color: black;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: grab;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+select {
+  color: black;
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+select option {
+  color: black;
+  background-color: #fff;
+}
+select:focus {
+  outline: none;
+  border-color: lightseagreen;
+}
+.deleteButton {
+  background-color: #ff5722;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}

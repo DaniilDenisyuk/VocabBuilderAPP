@@ -1,0 +1,98 @@
+.teachersGeneralContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.teacherByClassContainer {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex: 2;
+}
+
+.teachersContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generalList {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  gap: 10px;
+  min-width: 300px;
+  flex: 1;
+}
+
+.teachersList {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.teacherItem {
+  color: black;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: grab;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+.teacherItem:active {
+  cursor: grabbing;
+}
+
+.teachersContainer {
+  // background-color: lime;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.classContainer {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  width: 200px;
+}
+
+.classContainer ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.classContainer .teacherItem {
+  background-color: lightcoral;
+  color: black;
+  margin: 5px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: grab;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+.deleteButton {
+  background-color: #ff5722;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}

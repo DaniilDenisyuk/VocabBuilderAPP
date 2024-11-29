@@ -1,0 +1,91 @@
+.pupilsListContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.generalList {
+  min-width: 300px;
+  flex: 1;
+}
+
+.pupilsListByClassContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pupilsListByClass {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 2;
+}
+
+.classContainer {
+  border: 2px dashed #00796b; //
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 250px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.classContainer:hover {
+  background-color: #e0f7fa; //
+}
+
+.classTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.pupilsList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background-color: lightseagreen;
+}
+
+.pupilItem {
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #e0f7fa;
+  border: 1px solid #00796b;
+  border-radius: 4px;
+  cursor: grab; //
+  transition: transform 0.2s ease;
+}
+
+.pupilItem:active {
+  transform: scale(1.1);
+}
+
+.classesList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+  justify-content: space-around;
+}
+
+.deleteButton {
+  background-color: #ff5722;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}
