@@ -1,102 +1,54 @@
-.generalList {
-  min-width: 300px;
-  // background-color: lime;
+.classesContainer {
+  background-color: lightseagreen;
 
   display: flex;
   flex-direction: column;
-  list-style: none;
-  gap: 30px;
-}
-.classesGeneralContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-.allClassesListContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.classesListContainer {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  flex: 2;
-}
-.classItem {
-  background-color: lightseagreen;
-  padding: 8px;
-  margin-bottom: 5px;
-  background-color: #e0f7fa;
-  border: 1px solid #00796b;
-  border-radius: 4px;
-  cursor: grab; //
-  transition: transform 0.2s ease;
-}
-.classesList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
   gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.classesList li {
-  background-color: lightseagreen;
-  color: black;
-  margin: 5px 0;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.table th,
+.table td {
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: grab;
-  transition: background-color 0.3s ease;
+  text-align: left;
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.row {
+  // background-color: white;
 
   &:hover {
     background-color: #f1f1f1;
   }
 }
-
-.listClasses {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.liClasses {
-  background-color: lightseagreen;
+.itemNumber {
   color: black;
-  margin: 5px 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: grab;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #f1f1f1;
-  }
+  // font-weight: bold;
+  margin-right: 8px;
+}
+.itemNumber::after {
+  content: '.';
+  margin-left: 4px;
 }
 
-select {
+.itemNumber {
   color: black;
-  padding: 5px;
-  font-size: 14px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
+  // font-weight: bold;
+  margin-right: 8px;
 }
-select option {
-  color: black;
-  background-color: #fff;
-}
-select:focus {
-  outline: none;
-  border-color: lightseagreen;
+.itemNumber::after {
+  content: '.';
+  margin-left: 4px;
 }
 .deleteButton {
   background-color: #ff5722;
@@ -108,5 +60,48 @@ select:focus {
 }
 
 .deleteButton:hover {
-  background-color: #d32f2f;
+  background-color: white;
+  color: #ff5722;
+}
+.addButton {
+  background-color: white;
+  color: green;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-color: #ff5722;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.addButton:hover {
+  background-color: green;
+  color: white;
+}
+.itemNumber::after {
+  content: '.';
+  margin-left: 4px;
+}
+.multiClassSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: lightseagreen;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.classOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.classOption input[type='checkbox'] {
+  accent-color: #ff5722;
+  cursor: pointer;
+}
+
+.classOption:hover {
+  background-color: #f1f1f1;
 }

@@ -1,40 +1,41 @@
-import { DndContext } from '@dnd-kit/core';
-import Droppable from '../dnd/Droppable';
+// import { DndContext } from '@dnd-kit/core';
+// import Droppable from '../dnd/Droppable';
+import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
 import Draggable from '../dnd/Draggable';
 import style from './index.module.scss';
 import { useState } from 'react';
 
 export default function ClassesList({
   classes,
-  pupils,
-  teachers,
-  onPupilTransfer,
-  onTeacherCopy,
+  // pupils,
+  // teachers,
+  // onPupilTransfer,
+  // onTeacherCopy,
   onAddClass,
   onDelClass,
 }) {
   const [className, setClassName] = useState('');
 
-  const handleDragEnd = event => {
-    const { active, over } = event;
+  // const handleDragEnd = event => {
+  //   const { active, over } = event;
 
-    if (!active || !over) {
-      console.log('Drop failed: no valid target.');
-      return;
-    }
+  //   if (!active || !over) {
+  //     console.log('Drop failed: no valid target.');
+  //     return;
+  //   }
 
-    const itemId = active.id.split('-')[1];
-    const newClassId = parseInt(over.id.replace('class-', ''), 10);
+  //   const itemId = active.id.split('-')[1];
+  //   const newClassId = parseInt(over.id.replace('class-', ''), 10);
 
-    if (active.id.startsWith('pupil-')) {
-      onPupilTransfer(parseInt(itemId, 10), newClassId);
-    }
+  //   if (active.id.startsWith('pupil-')) {
+  //     onPupilTransfer(parseInt(itemId, 10), newClassId);
+  //   }
 
-    if (active.id.startsWith('teacher-')) {
-      onTeacherCopy(parseInt(itemId, 10), newClassId);
-    }
-  };
-
+  //   if (active.id.startsWith('teacher-')) {
+  //     onTeacherCopy(parseInt(itemId, 10), newClassId);
+  //   }
+  // };
+  const handleKeyDown = useEnterKeyHandler(handleAddClass);
   function handleAddClass() {
     onAddClass(className);
     setClassName('');
@@ -46,36 +47,51 @@ export default function ClassesList({
 
   return (
     <>
-      <h2>All classes</h2>
-      <div className={style.classesGeneralContainer}>
+      <div className={style.classesContainer}>
+        <h2>Classes</h2>
         <div className={style.inputContainer}>
           <input
             placeholder="add class"
             value={className}
             onChange={e => setClassName(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
-          <button onClick={handleAddClass}>Add class</button>
-          <div className={style.generalList}>
+          <button onClick={handleAddClass} className={style.addButton}>
+            Add class
+          </button>
+          <div className={style.classesList}>
             {classes && classes.length > 0 ? (
-              <ol>
-                {classes.map(cl => (
-                  <li key={cl.id} className={style.classItem}>
-                    <Draggable id={`pupil-${cl.id}`}>
-                      {cl.name}
+              <table className={style.table}>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                {classes.map((cl, index) => (
+                  <tr key={cl.id} className={style.classItem}>
+                    <td>
+                      <span className={style.itemNumber}>{index + 1}</span>
+                    </td>
+                    <td>
+                      <Draggable id={`pupil-${cl.id}`}>{cl.name}</Draggable>
+                    </td>
+                    <td>
                       <button onClick={() => handleDelClass(cl.id)} className={style.deleteButton}>
                         Delete
                       </button>
-                    </Draggable>
-                  </li>
+                    </td>
+                  </tr>
                 ))}
-              </ol>
+              </table>
             ) : (
               <p>No classes available</p>
             )}
           </div>
         </div>
 
-        <div className={style.allClassesListContainer}>
+        {/* <div className={style.allClassesListContainer}>
           <h3>Classes</h3>
           <div className={style.classesListContainer}>
             <DndContext onDragEnd={handleDragEnd}>
@@ -121,7 +137,7 @@ export default function ClassesList({
               </ul>
             </DndContext>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

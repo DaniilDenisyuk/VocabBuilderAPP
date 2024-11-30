@@ -1,38 +1,45 @@
 import { useState } from 'react';
-import { DndContext } from '@dnd-kit/core';
+// import { DndContext } from '@dnd-kit/core';
 import Draggable from '../dnd/Draggable';
-import Droppable from '../dnd/Droppable';
+// import Droppable from '../dnd/Droppable';
 import style from './index.module.scss';
-import ClassSelector from '../classesList/ClassSelector';
+// import ClassSelector from '../classesList/ClassSelector';
+import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
+import MultiClassSelector from '../classesList/MultiClassSelector';
 
 export default function TeachersList({
   teachers,
   classes,
-  onTeacherTransfer,
-  onClassChange,
+  // onTeacherTransfer,
+  // onClassChange,
   onAddTeacher,
   onDelTeacher,
+  onUpdTeacherClasses,
 }) {
   const [teacherName, setTeacherName] = useState('');
+  const handleKeyDown = useEnterKeyHandler(handleAddTeacher);
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
+  // function handleDragEnd(event) {
+  //   const { active, over } = event;
 
-    if (!active || !over) {
-      console.warn('Drag operation failed: missing active or over element.');
-      return;
-    }
+  //   if (!active || !over) {
+  //     console.warn('Drag operation failed: missing active or over element.');
+  //     return;
+  //   }
 
-    if (active.id.startsWith('teacher-') && over.id.startsWith('class-')) {
-      const teacherId = parseInt(active.id.replace('teacher-', ''), 10);
-      const newClassId = parseInt(over.id.replace('class-', ''), 10);
+  //   if (active.id.startsWith('teacher-') && over.id.startsWith('class-')) {
+  //     const teacherId = parseInt(active.id.replace('teacher-', ''), 10);
+  //     const newClassId = parseInt(over.id.replace('class-', ''), 10);
 
-      console.log(`Teacher ${teacherId} moved to class ${newClassId}`);
-      onTeacherTransfer(teacherId, newClassId);
-    } else {
-      console.warn('Invalid drag operation.');
-    }
-  }
+  //     console.log(`Teacher ${teacherId} moved to class ${newClassId}`);
+  //     onTeacherTransfer(teacherId, newClassId);
+  //   } else {
+  //     console.warn('Invalid drag operation.');
+  //   }
+  // }
+  const handleClassChange = (teacherId, updClassIds) => {
+    onUpdTeacherClasses(teacherId, updClassIds);
+  };
 
   function handleAddTeacher() {
     if (!teacherName.trim()) {
@@ -45,39 +52,59 @@ export default function TeachersList({
 
   return (
     <>
-      <h2>All Teachers</h2>
+      <div className={style.teachersContainer}>
+        <h2>Teachers</h2>
 
-      <div className={style.inputContainerTeach}>
-        <input
-          placeholder="Add teacher"
-          value={teacherName}
-          onChange={e => setTeacherName(e.target.value)}
-        />
-        <button onClick={handleAddTeacher}>Add Teacher</button>
-      </div>
+        <div className={style.inputContainer}>
+          <input
+            placeholder="Add teacher"
+            value={teacherName}
+            onChange={e => setTeacherName(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleAddTeacher} className={style.addButton}>
+            Add Teacher
+          </button>
+        </div>
 
-      <div className={style.teachersGeneralContainer}>
-        <div className={style.generalList}>
-          <ol className={style.teachersList}>
-            {teachers.map(teacher => (
-              <li key={teacher.id} className={style.teacherItem}>
-                <Draggable id={`teacher-${teacher.id}`}>
-                  {teacher.name}
-                  <ClassSelector
+        <table className={style.table}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teachers.map((teacher, index) => (
+              <tr key={teacher.id} className={style.row}>
+                <td>
+                  <span className={style.itemNumber}>{index + 1}</span>
+                </td>
+                <td>
+                  <Draggable id={`teacher-${teacher.id}`}>{teacher.name}</Draggable>
+                </td>
+                <td>
+                  <MultiClassSelector
                     classes={classes}
-                    currentClassIds={teacher.classIds}
-                    onChange={newClassId => onClassChange(teacher.id, newClassId, false)}
+                    selectedClassIds={teacher.classIds}
+                    onChange={updClassIds => handleClassChange(teacher.id, updClassIds, false)}
+                    // currentClassIds={teacher.classIds}
+                    // onChange={newClassId => onClassChange(teacher.id, newClassId, false)}
                   />
+                </td>
+                <td>
                   <button onClick={() => onDelTeacher(teacher.id)} className={style.deleteButton}>
                     Delete
                   </button>
-                </Draggable>
-              </li>
+                </td>
+              </tr>
             ))}
-          </ol>
-        </div>
+          </tbody>
+        </table>
 
-        <div className={style.teachersContainer}>
+        {/* <div className={style.teachersContainer}>
           <h3>Teachers by Class</h3>
           <div className={style.teacherByClassContainer}>
             <DndContext onDragEnd={handleDragEnd}>
@@ -101,7 +128,7 @@ export default function TeachersList({
               ))}
             </DndContext>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

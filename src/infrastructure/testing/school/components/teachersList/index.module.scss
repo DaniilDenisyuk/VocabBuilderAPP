@@ -1,89 +1,45 @@
-.teachersGeneralContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-.teacherByClassContainer {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  flex: 2;
-}
-
 .teachersContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.generalList {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: row;
-  list-style: none;
-  gap: 10px;
-  min-width: 300px;
-  flex: 1;
-}
-
-.teachersList {
-  padding: 0;
-  margin: 0;
+  background-color: lightseagreen;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.teacherItem {
-  color: black;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.table th,
+.table td {
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: grab;
+  text-align: left;
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.row {
+  // background-color: white;
 
   &:hover {
     background-color: #f1f1f1;
   }
 }
-.teacherItem:active {
-  cursor: grabbing;
-}
-
-.teachersContainer {
-  // background-color: lime;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.classContainer {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  width: 200px;
-}
-
-.classContainer ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.classContainer .teacherItem {
-  background-color: lightcoral;
+.itemNumber {
   color: black;
-  margin: 5px 0;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: grab;
-
-  &:hover {
-    background-color: #f1f1f1;
-  }
+  // font-weight: bold;
+  margin-right: 8px;
 }
+.itemNumber::after {
+  content: '.';
+  margin-left: 4px;
+}
+
 .deleteButton {
   background-color: #ff5722;
   color: white;
@@ -91,8 +47,25 @@
   border-radius: 4px;
   cursor: pointer;
   margin-left: 10px;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: white;
+    color: #ff5722;
+  }
 }
 
-.deleteButton:hover {
-  background-color: #d32f2f;
+.addButton {
+  background-color: white;
+  color: green;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: green;
+    color: white;
+  }
 }

@@ -6,7 +6,7 @@ export default function Droppable(props) {
   });
   const style = {
     opacity: isOver ? 1 : 0.5,
-    border: '2px dashed #ccc',
+    border: '2px dashed gray',
     padding: '10px',
   };
 
