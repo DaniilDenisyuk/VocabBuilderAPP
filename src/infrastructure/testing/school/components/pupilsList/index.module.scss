@@ -25,15 +25,12 @@
 }
 
 .row {
-  // background-color: white;
-
   &:hover {
     background-color: #f1f1f1;
   }
 }
 .itemNumber {
   color: black;
-  // font-weight: bold;
   margin-right: 8px;
 }
 .itemNumber::after {

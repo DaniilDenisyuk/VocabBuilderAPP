@@ -185,14 +185,16 @@ export default function SchoolManagement() {
           if (isPupil) {
             const oldClass = draft.classes.find(cl => cl.id === item.classId);
             if (oldClass) {
-              oldClass.pupilIds = oldClass.pupilIds.filter(id => id !== itemId); // видалення учня з попереднього класу
+              // видалення учня з попереднього класу
+              oldClass.pupilIds = oldClass.pupilIds.filter(id => id !== itemId);
             }
             item.classId = updClassIds;
           }
           // оновлення для вчителя
           else {
             if (!item.classIds.includes(updClassIds)) {
-              item.classIds.push(updClassIds); // додавання класу вчителю
+              // додавання класу вчителю
+              item.classIds.push(updClassIds);
             }
           }
 
@@ -200,9 +202,11 @@ export default function SchoolManagement() {
           const newClass = draft.classes.find(cl => cl.id === updClassIds);
           if (newClass) {
             if (isPupil && !newClass.pupilIds.includes(itemId)) {
-              newClass.pupilIds.push(itemId); // додавання учня в новий клас
+              // додавання учня в новий клас
+              newClass.pupilIds.push(itemId);
             } else if (!isPupil && !newClass.teacherIds.includes(itemId)) {
-              newClass.teacherIds.push(itemId); // додавання вчителя в новий клас
+              // додавання вчителя в новий клас
+              newClass.teacherIds.push(itemId);
             }
           }
         }
