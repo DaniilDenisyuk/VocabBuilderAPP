@@ -1,6 +1,6 @@
 import style from './index.module.scss';
 
-export default function MultiClassSelector({ classes, selectedClassIds, onChange }) {
+export default function ClassesMultiSelector({ classes, selectedClassIds, onChange }) {
   function handleCheckboxChange(classId) {
     const updClassIds = selectedClassIds.includes(classId)
       ? selectedClassIds.filter(id => id !== classId)

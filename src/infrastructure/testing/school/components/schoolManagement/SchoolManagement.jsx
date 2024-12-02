@@ -1,5 +1,5 @@
 //SchoolManagement.jsx
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ClassesList from '../classesList/ClassesList';
 import PupilsList from '../pupilsList/PupilsList';
 import TeachersList from '../teachersList/TeachersList';
@@ -10,6 +10,7 @@ import Tabs from '../../atoms/tabs/Tabs';
 import ClassesTeachers from '../classesTeachersPupils/ClassesTeachers';
 import ClassesPupils from '../classesTeachersPupils/ClassesPupils';
 import { DndContext } from '@dnd-kit/core';
+import SubjectsList from '../subjectsList/SubjectsList';
 const initialState = {
   classes: [
     { id: 1, name: '1-A', teacherIds: [], pupilIds: [] },
@@ -21,6 +22,16 @@ const initialState = {
     { id: 2, name: 'Teacher2', classIds: [] },
     { id: 3, name: 'Teacher3', classIds: [] },
   ],
+  subjects: [
+    { id: 1, name: 'Math' },
+    { id: 2, name: 'physics' },
+    { id: 3, name: ' art' },
+    { id: 3, name: ' history' },
+    { id: 3, name: ' biology ' },
+    { id: 3, name: 'chemistry' },
+    { id: 3, name: 'language' },
+  ],
+
   pupils: [
     { id: 1, name: 'Pupil1', classId: 0 },
     { id: 2, name: 'Pupil2', classId: 0 },
@@ -36,9 +47,8 @@ const initialState = {
 
 export default function SchoolManagement() {
   const [state, setState] = useState(initialState);
-  const { classes, teachers, pupils } = state;
+  const { classes, teachers, pupils, subjects } = state;
   const [currentTab, setCurrentTab] = useState('classesTeachersPupils');
-
   const tabs = [
     {
       label: 'Classes & Teachers & Pupils',
@@ -48,6 +58,7 @@ export default function SchoolManagement() {
           class="content active"
           classes={classes}
           teachers={teachers}
+          subjects={subjects}
           pupils={pupils}
         />
       ),
@@ -55,7 +66,7 @@ export default function SchoolManagement() {
     {
       label: 'Classes & Teachers',
       key: 'classesTeachers',
-      content: <ClassesTeachers classes={classes} teachers={teachers} />,
+      content: <ClassesTeachers classes={classes} teachers={teachers} subjects={subjects} />,
     },
     {
       label: 'Classes & Pupils',
@@ -63,25 +74,6 @@ export default function SchoolManagement() {
       content: <ClassesPupils classes={classes} pupils={pupils} />,
     },
   ];
-  const handleDragEnd = event => {
-    const { active, over } = event;
-
-    if (!active || !over) {
-      console.log('Drop failed: no valid target.');
-      return;
-    }
-
-    const itemId = active.id.split('-')[1];
-    const newClassId = parseInt(over.id.replace('class-', ''), 10);
-
-    if (active.id.startsWith('pupil-')) {
-      handlePupilTransfer(parseInt(itemId, 10), newClassId);
-    }
-
-    if (active.id.startsWith('teacher-')) {
-      handleTeacherCopy(parseInt(itemId, 10), newClassId);
-    }
-  };
 
   const handlePupilTransfer = (pupilId, newClassId) => {
     setState(prevState => {
@@ -105,125 +97,111 @@ export default function SchoolManagement() {
   };
 
   //produce з бібліотеки immer для оновлення стану
-  const handleAddClass = className => {
+  const handleAddItem = useCallback((field, itemName) => {
     setState(
       produce(draft => {
-        const newClassId = draft.classes.length + 1;
-        draft.classes.push({
-          id: newClassId,
-          name: className.trim(),
-          teacherIds: [],
-          pupilIds: [],
-        });
+        const newId = draft[field].length + 1;
+        draft[field].push({ id: newId, name: itemName.trim() });
       })
     );
-  };
+  }, []);
 
-  const handleDelClass = classId => {
+  const handleDelItem = useCallback((field, itemId) => {
     setState(
       produce(draft => {
-        draft.classes = draft.classes.filter(cl => cl.id !== classId);
+        draft[field] = draft[field].filter(item => item.id !== itemId);
       })
     );
-  };
+  }, []);
 
-  const handleAddTeacher = teacherName => {
-    setState(prevState =>
-      produce(prevState, draft => {
-        draft.teachers.push({
-          id: draft.teachers.length + 1,
-          name: teacherName.trim(),
-          classIds: [],
-        });
-      })
-    );
-  };
-
-  const handleDelTeacher = teacherId => {
-    setState(prevState =>
-      produce(prevState, draft => {
-        draft.teachers = draft.teachers.filter(t => t.id !== teacherId);
-      })
-    );
-  };
-
-  const handleAddPupil = pupilName => {
-    setState(prevState =>
-      produce(prevState, draft => {
-        draft.pupils.push({
-          id: draft.pupils.length + 1,
-          name: pupilName.trim(),
-          classId: 0,
-        });
-      })
-    );
-  };
-
-  const handleDelPupil = pupilId => {
-    setState(prevState =>
-      produce(prevState, draft => {
-        draft.pupils = draft.pupils.filter(p => p.id !== pupilId);
-      })
-    );
-  };
-
-  const handleClassChange = (itemId, updClassIds, isPupil) => {
-    // перевірка на наявність класу
-    if (!state.classes.some(cl => cl.id === updClassIds)) {
-      console.error(`Class ID ${updClassIds} not found`);
-      return;
-    }
-
+  const handleUpdItem = useCallback((field, itemId, updData) => {
     setState(
       produce(draft => {
-        const item = isPupil
-          ? draft.pupils.find(p => p.id === itemId) // шукаємо учня
-          : draft.teachers.find(t => t.id === itemId); // шукаємо вчителя
-
-        if (item) {
-          // оновлення для учня
-          if (isPupil) {
-            const oldClass = draft.classes.find(cl => cl.id === item.classId);
-            if (oldClass) {
-              // видалення учня з попереднього класу
-              oldClass.pupilIds = oldClass.pupilIds.filter(id => id !== itemId);
-            }
-            item.classId = updClassIds;
-          }
-          // оновлення для вчителя
-          else {
-            if (!item.classIds.includes(updClassIds)) {
-              // додавання класу вчителю
-              item.classIds.push(updClassIds);
-            }
-          }
-
-          // додавання до нового класу
-          const newClass = draft.classes.find(cl => cl.id === updClassIds);
-          if (newClass) {
-            if (isPupil && !newClass.pupilIds.includes(itemId)) {
-              // додавання учня в новий клас
-              newClass.pupilIds.push(itemId);
-            } else if (!isPupil && !newClass.teacherIds.includes(itemId)) {
-              // додавання вчителя в новий клас
-              newClass.teacherIds.push(itemId);
-            }
-          }
-        }
+        const item = draft[field].find(item => item.id === itemId);
+        if (item) Object.assign(item, updData);
       })
     );
-  };
-  const handleUpdTeacherClasses = (teacherId, updatedClassIds) => {
-    setState(prevState => {
-      const updatedTeachers = prevState.teachers.map(teacher => {
-        if (teacher.id === teacherId) {
-          return { ...teacher, classIds: updatedClassIds };
-        }
-        return teacher;
-      });
-      return { ...prevState, teachers: updatedTeachers };
-    });
-  };
+  }, []);
+
+  //!Object.assign(target, ...sources)-це метод JavaScript, який копіює всі власні 'лише переліки' (enumerable) властивості з одного або більше  об'єктів до цільового об'єкта.
+  //!Якщо в об'єктів джерел є однакові властивості, значення з останнього об'єкта перезаписує попереднє.
+  //!Не здійснює глибокого копіювання. Якщо властивість є об'єктом, то копіюється лише посилання на цей об'єкт.
+  //target -цільовий об'єкт, в який будуть скопійовані властивості
+  //sources- один або кілька об'єктів, властивості яких будуть скопійовані до цільового об'єкта
+  //const target = { a: 1 };
+  //const source = { b: 2, c: 3 };
+  // Object.assign(target, source);
+  // console.log(target); // { a: 1, b: 2, c: 3 }
+
+  const handleDragEnd = useCallback(
+    event => {
+      const { active, over } = event;
+
+      if (!active || !over) {
+        console.log('Drop failed: no valid target.');
+        return;
+      }
+
+      const itemId = active.id.split('-')[1];
+      const newClassId = parseInt(over.id.replace('class-', ''), 10);
+
+      if (active.id.startsWith('pupil-')) {
+        handlePupilTransfer(parseInt(itemId, 10), newClassId);
+      }
+
+      if (active.id.startsWith('teacher-')) {
+        handleTeacherCopy(parseInt(itemId, 10), newClassId);
+      }
+    },
+    [handlePupilTransfer, handleTeacherCopy]
+  );
+
+  // const handleClassChange = (itemId, updClassIds, isPupil) => {
+  //   // перевірка на наявність класу
+  //   if (!state.classes.some(cl => cl.id === updClassIds)) {
+  //     console.error(`Class ID ${updClassIds} not found`);
+  //     return;
+  //   }
+
+  //   setState(
+  //     produce(draft => {
+  //       const item = isPupil
+  //         ? draft.pupils.find(p => p.id === itemId) // шукаємо учня
+  //         : draft.teachers.find(t => t.id === itemId); // шукаємо вчителя
+
+  //       if (item) {
+  //         // оновлення для учня
+  //         if (isPupil) {
+  //           const oldClass = draft.classes.find(cl => cl.id === item.classId);
+  //           if (oldClass) {
+  //             // видалення учня з попереднього класу
+  //             oldClass.pupilIds = oldClass.pupilIds.filter(id => id !== itemId);
+  //           }
+  //           item.classId = updClassIds;
+  //         }
+  //         // оновлення для вчителя
+  //         else {
+  //           if (!item.classIds.includes(updClassIds)) {
+  //             // додавання класу вчителю
+  //             item.classIds.push(updClassIds);
+  //           }
+  //         }
+
+  //         // додавання до нового класу
+  //         const newClass = draft.classes.find(cl => cl.id === updClassIds);
+  //         if (newClass) {
+  //           if (isPupil && !newClass.pupilIds.includes(itemId)) {
+  //             // додавання учня в новий клас
+  //             newClass.pupilIds.push(itemId);
+  //           } else if (!isPupil && !newClass.teacherIds.includes(itemId)) {
+  //             // додавання вчителя в новий клас
+  //             newClass.teacherIds.push(itemId);
+  //           }
+  //         }
+  //       }
+  //     })
+  //   );
+  // };
   return (
     <>
       <h1>School Management</h1>
@@ -232,28 +210,43 @@ export default function SchoolManagement() {
         <TeachersList
           classes={classes}
           teachers={teachers}
+          subjects={subjects}
           onTransfer={handlePupilTransfer}
-          onClassChange={handleClassChange}
-          onAddTeacher={handleAddTeacher}
-          onDelTeacher={handleDelTeacher}
-          onUpdTeacherClasses={handleUpdTeacherClasses}
-          // selectedItems={selectedItems.teachers}
-          // toggleSelection={id => toggleSelection('teachers', id)}
+          onAddTeacher={name => handleAddItem('teachers', name)}
+          onDelTeacher={id => handleDelItem('teachers', id)}
+          onClassChange={(teacherId, newClassId) =>
+            handleUpdItem('teachers', teacherId, { classId: newClassId })
+          }
+          onUpdTeacherClasses={(teacherId, updClasses) =>
+            handleUpdItem('teachers', teacherId, { classIds: updClasses })
+          }
+          onUpdSubject={(subjectId, updData) => handleUpdItem('subjects', subjectId, updData)}
         />
         <PupilsList
           classes={classes}
           pupils={pupils}
           onTransfer={handlePupilTransfer}
-          onClassChange={handleClassChange}
-          onAddPupil={handleAddPupil}
-          onDelPupil={handleDelPupil}
+          onAddPupil={name => handleAddItem('pupils', name)}
+          onDelPupil={id => handleDelItem('pupils', id)}
+          onClassChange={(pupilId, newClassId) =>
+            handleUpdItem('pupils', pupilId, { classId: newClassId })
+          }
         />
         <ClassesList
           classes={classes}
           pupils={pupils}
           teachers={teachers}
-          onAddClass={handleAddClass}
-          onDelClass={handleDelClass}
+          onAddClass={name => handleAddItem('classes', name)}
+          onDelClass={id => handleDelItem('classes', id)}
+          onPupilTransfer={handlePupilTransfer}
+          onTeacherCopy={handleTeacherCopy}
+        />
+        <SubjectsList
+          subjects={subjects}
+          pupils={pupils}
+          teachers={teachers}
+          onAddSubject={name => handleAddItem('subject', name)}
+          onDelSubject={id => handleDelItem('subject', id)}
           onPupilTransfer={handlePupilTransfer}
           onTeacherCopy={handleTeacherCopy}
         />

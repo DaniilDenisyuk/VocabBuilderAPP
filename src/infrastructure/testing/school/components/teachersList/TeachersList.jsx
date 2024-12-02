@@ -5,16 +5,20 @@ import Draggable from '../dnd/Draggable';
 import style from './index.module.scss';
 // import ClassSelector from '../classesList/ClassSelector';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
-import MultiClassSelector from '../classesList/MultiClassSelector';
+import ClassesMultiSelector from '../classesList/ClassesMultiSelector';
+import SubjectsMultiSelector from '../subjectsList/SubjectsMultiSelector';
+import useTeacherUpdater from '../../hooks/useTeacherUpdater';
 
 export default function TeachersList({
   teachers,
   classes,
+  subjects,
   // onTeacherTransfer,
   // onClassChange,
   onAddTeacher,
   onDelTeacher,
   onUpdTeacherClasses,
+  onUpdTeacherSubject,
 }) {
   const [teacherName, setTeacherName] = useState('');
   const handleKeyDown = useEnterKeyHandler(handleAddTeacher);
@@ -37,14 +41,23 @@ export default function TeachersList({
   //     console.warn('Invalid drag operation.');
   //   }
   // }
-  const handleClassChange = (teacherId, updClassIds) => {
-    onUpdTeacherClasses(teacherId, updClassIds);
-  };
+  const teacherUpd = useTeacherUpdater(
+    teachers,
+    subjects,
+    onUpdTeacherClasses,
+    onUpdTeacherSubject
+  );
+  const handleClassChange = teacherUpd('classes');
+  const handleSubjectChange = teacherUpd('subjects');
 
   function handleAddTeacher() {
-    if (!teacherName.trim()) {
-      console.warn('Teacher name cannot be empty.');
+    const tName = teacherName.trim();
+    if (!tName) {
+      console.warn('Teacher name cannot be empty');
       return;
+    }
+    if (teachers.some(t => t.name === tName)) {
+      console.warn('Teacher with this name already exists');
     }
     onAddTeacher(teacherName.trim());
     setTeacherName('');
@@ -72,6 +85,7 @@ export default function TeachersList({
             <tr>
               <th>#</th>
               <th>Name</th>
+              <th>Subjects</th>
               <th>Class</th>
               <th>Action</th>
             </tr>
@@ -86,7 +100,13 @@ export default function TeachersList({
                   <Draggable id={`teacher-${teacher.id}`}>{teacher.name}</Draggable>
                 </td>
                 <td>
-                  <MultiClassSelector
+                  <SubjectsMultiSelector
+                    subjects={teacher.subjects || []}
+                    onChange={updSubjectsIds => handleSubjectChange(teacher.id, updSubjectsIds)}
+                  />
+                </td>
+                <td>
+                  <ClassesMultiSelector
                     classes={classes}
                     selectedClassIds={teacher.classIds}
                     onChange={updClassIds => handleClassChange(teacher.id, updClassIds, false)}
