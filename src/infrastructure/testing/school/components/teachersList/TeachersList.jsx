@@ -1,70 +1,69 @@
-import { useState } from 'react';
-// import { DndContext } from '@dnd-kit/core';
+import { useCallback, useState } from 'react';
 import Draggable from '../dnd/Draggable';
-// import Droppable from '../dnd/Droppable';
 import style from './index.module.scss';
-// import ClassSelector from '../classesList/ClassSelector';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
-import ClassesMultiSelector from '../classesList/ClassesMultiSelector';
-import SubjectsMultiSelector from '../subjectsList/SubjectsMultiSelector';
-import useTeacherUpdater from '../../hooks/useTeacherUpdater';
+import MultiClassSelector from '../classesList/MultiClassSelector';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, deleteItem, updTeachers } from '../../redux/schoolSlice';
 
-export default function TeachersList({
-  teachers,
-  classes,
-  subjects,
-  // onTeacherTransfer,
-  // onClassChange,
-  onAddTeacher,
-  onDelTeacher,
-  onUpdTeacherClasses,
-  onUpdTeacherSubject,
-}) {
+export default function TeachersList() {
+  const dispatch = useDispatch();
+  const school = useSelector(state => state.school);
+  const { teachers, classes } = school;
+
   const [teacherName, setTeacherName] = useState('');
-  const handleKeyDown = useEnterKeyHandler(handleAddTeacher);
+  const [error, setError] = useState('');
 
-  // function handleDragEnd(event) {
-  //   const { active, over } = event;
-
-  //   if (!active || !over) {
-  //     console.warn('Drag operation failed: missing active or over element.');
-  //     return;
-  //   }
-
-  //   if (active.id.startsWith('teacher-') && over.id.startsWith('class-')) {
-  //     const teacherId = parseInt(active.id.replace('teacher-', ''), 10);
-  //     const newClassId = parseInt(over.id.replace('class-', ''), 10);
-
-  //     console.log(`Teacher ${teacherId} moved to class ${newClassId}`);
-  //     onTeacherTransfer(teacherId, newClassId);
-  //   } else {
-  //     console.warn('Invalid drag operation.');
-  //   }
-  // }
-  const teacherUpd = useTeacherUpdater(
-    teachers,
-    subjects,
-    onUpdTeacherClasses,
-    onUpdTeacherSubject
-  );
-  const handleClassChange = teacherUpd('classes');
-  const handleSubjectChange = teacherUpd('subjects');
-
-  function handleAddTeacher() {
-    const tName = teacherName.trim();
-    if (!tName) {
-      console.warn('Teacher name cannot be empty');
+  const handleAddTeacher = useCallback(() => {
+    if (!teacherName.trim()) {
+      setError('Teacher name cannot be empty');
       return;
     }
-    if (teachers.some(t => t.name === tName)) {
-      console.warn('Teacher with this name already exists');
+    if (teachers.some(teacher => teacher.name === teacherName)) {
+      setError('Teacher name must be unique');
+      return;
     }
-    onAddTeacher(teacherName.trim());
+    setError('');
+    const newId = teachers.length > 0 ? teachers[teachers.length - 1].id + 1 : 1;
+
+    dispatch(
+      addItem({
+        field: 'teachers',
+        item: { id: newId, name: teacherName, classIds: [], subjectsIds: [] },
+      })
+    );
     setTeacherName('');
-  }
+  }, [dispatch, teacherName, teachers]);
+
+  const handleDelTeacher = useCallback(
+    id => {
+      if (!id) {
+        console.error('Invalid teacher id:', id);
+        return;
+      }
+
+      const teacherToDelete = teachers.find(cl => cl.id === id);
+      if (teacherToDelete) {
+        dispatch(deleteItem({ field: 'teachers', itemId: id }));
+      } else {
+        console.error('Teacher not found:', id);
+      }
+    },
+    [dispatch, teachers]
+  );
+
+  const handleClassChange = useCallback(
+    (teacherId, updatedClassIds) => {
+      dispatch(updTeachers({ teacherId, classIds: updatedClassIds }));
+    },
+    [dispatch]
+  );
+
+  const handleKeyDown = useEnterKeyHandler(handleAddTeacher);
 
   return (
     <>
+      <div className={style.switchContainer}></div>
       <div className={style.teachersContainer}>
         <h2>Teachers</h2>
 
@@ -78,6 +77,7 @@ export default function TeachersList({
           <button onClick={handleAddTeacher} className={style.addButton}>
             Add Teacher
           </button>
+          {error && <p className={style.error}>{error}</p>}
         </div>
 
         <table className={style.table}>
@@ -85,70 +85,41 @@ export default function TeachersList({
             <tr>
               <th>#</th>
               <th>Name</th>
-              <th>Subjects</th>
               <th>Class</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {teachers.map((teacher, index) => (
-              <tr key={teacher.id} className={style.row}>
-                <td>
-                  <span className={style.itemNumber}>{index + 1}</span>
-                </td>
-                <td>
-                  <Draggable id={`teacher-${teacher.id}`}>{teacher.name}</Draggable>
-                </td>
-                <td>
-                  <SubjectsMultiSelector
-                    subjects={teacher.subjects || []}
-                    onChange={updSubjectsIds => handleSubjectChange(teacher.id, updSubjectsIds)}
-                  />
-                </td>
-                <td>
-                  <ClassesMultiSelector
-                    classes={classes}
-                    selectedClassIds={teacher.classIds}
-                    onChange={updClassIds => handleClassChange(teacher.id, updClassIds, false)}
-                    // currentClassIds={teacher.classIds}
-                    // onChange={newClassId => onClassChange(teacher.id, newClassId, false)}
-                  />
-                </td>
-                <td>
-                  <button onClick={() => onDelTeacher(teacher.id)} className={style.deleteButton}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {Array.isArray(teachers) &&
+              teachers.map((teacher, index) => (
+                <tr key={teacher.id} className={style.row}>
+                  <td>
+                    <span className={style.itemNumber}>{index + 1}</span>
+                  </td>
+                  <td>
+                    <Draggable id={`teacher-${teacher.id}`}>{teacher.name}</Draggable>
+                  </td>
+                  <td>
+                    <MultiClassSelector
+                      classes={classes}
+                      selectedClassIds={teacher.classIds}
+                      onChange={updClassIds => {
+                        handleClassChange(teacher.id, updClassIds);
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleDelTeacher(teacher.id)}
+                      className={style.deleteButton}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
-
-        {/* <div className={style.teachersContainer}>
-          <h3>Teachers by Class</h3>
-          <div className={style.teacherByClassContainer}>
-            <DndContext onDragEnd={handleDragEnd}>
-              {classes.map(classItem => (
-                <Droppable
-                  id={`class-${classItem.id}`}
-                  key={classItem.id}
-                  className={style.classContainer}
-                >
-                  <h3>{classItem.name}</h3>
-                  <ol className={style.teachersList}>
-                    {teachers
-                      .filter(teacher => teacher.classIds.includes(classItem.id))
-                      .map(teacher => (
-                        <li key={teacher.id} className={style.teacherItem}>
-                          <Draggable id={`teacher-${teacher.id}`}>{teacher.name}</Draggable>
-                        </li>
-                      ))}
-                  </ol>
-                </Droppable>
-              ))}
-            </DndContext>
-          </div>
-        </div> */}
       </div>
     </>
   );

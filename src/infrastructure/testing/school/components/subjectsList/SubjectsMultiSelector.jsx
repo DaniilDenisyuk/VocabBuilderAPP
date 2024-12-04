@@ -1,52 +1,69 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import style from './index.module.scss';
 
-export default function SubjectsMultiSelector({ subjects = [] }) {
-  const initialSubjects = subjects;
-  //стан вибраних і доступних предметів
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
-  const [avaibleSubjects, setAvaibleSubjects] = useState(initialSubjects);
+export default function SubjectsMultiSelector({
+  subjects = [],
+  selectedSubjects = [],
+  onSubjectsChange,
+}) {
+  //відфільтрувати доступні
+  const availableSubjects = useMemo(() => {
+    return subjects.filter(
+      subject => !selectedSubjects.some(selected => selected.id === subject.id)
+    );
+  }, [subjects, selectedSubjects]);
 
   //додати предмет
-  const handleAddSubject = subject => {
-    setSelectedSubjects([...selectedSubjects, subject]);
-    setAvaibleSubjects(avaibleSubjects.filter(item => item !== subject));
+  const handleAddSubject = subjectId => {
+    const subjectToAdd = subjects.find(subject => subject.id === subjectId);
+    if (!subjectToAdd) return;
+
+    const updatedSelectedSubjects = [...selectedSubjects, subjectToAdd];
+    onSubjectsChange(updatedSelectedSubjects);
   };
+
   //видалити предмет
-  const handleRemoveSubject = subject => {
-    setSelectedSubjects(selectedSubjects.filter(item => item !== subject));
-    setAvaibleSubjects([...avaibleSubjects, subject]);
+  const handleRemoveSubject = subjectId => {
+    const updatedSelectedSubjects = selectedSubjects.filter(subject => subject.id !== subjectId);
+    onSubjectsChange(updatedSelectedSubjects);
   };
 
   return (
-    <>
-      <div className={style.multiClassSelector}>
-        {/* селектор предметів */}
-
-        <select
-          onChange={e => handleAddSubject(e.target.value)}
-          value="" // очистити значення після вибору
-          style={{ marginBottom: '10px', padding: '5px' }}
-        >
-          <option value="" disabled>
-            Оберіть предмет
+    <div>
+      {/* селектор доступних предметів */}
+      <select
+        onChange={e => handleAddSubject(parseInt(e.target.value, 10))}
+        value=""
+        className={style.selector}
+      >
+        <option value="" disabled>
+          Choose a subject
+        </option>
+        {availableSubjects.map(subject => (
+          <option key={subject.id} value={subject.id}>
+            {subject.name}
           </option>
-          {avaibleSubjects.map((subject, index) => (
-            <option key={index} value={subject}>
-              {subject}
-            </option>
-          ))}
-        </select>
-        {/* вибрані предмети */}
-        <div>
-          {selectedSubjects.map((subject, index) => (
-            <div key={index}>
-              <span>{subject}</span>
-              <button onClick={() => handleRemoveSubject(subject)}>x</button>
+        ))}
+      </select>
+
+      {/* список вибраних предметів */}
+      <div className={style.selectedSubjects}>
+        {selectedSubjects.length > 0 ? (
+          selectedSubjects.map(subject => (
+            <div key={subject.id} className={style.selectedSubjectItem}>
+              <span>{subject.name}</span>
+              <button
+                onClick={() => handleRemoveSubject(subject.id)}
+                className={style.removeButton}
+              >
+                x
+              </button>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p className={style.placeholder}>No subjects selected</p>
+        )}
       </div>
-    </>
+    </div>
   );
 }

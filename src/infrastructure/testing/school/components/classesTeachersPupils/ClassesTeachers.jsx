@@ -2,8 +2,12 @@
 import Droppable from '../dnd/Droppable';
 import Draggable from '../dnd/Draggable';
 import style from './index.module.scss';
+import { useSelector } from 'react-redux';
 
-export default function ClassesTeachers({ classes, teachers }) {
+export default function ClassesTeachers() {
+  const classes = useSelector(state => state.school.classes);
+  const teachers = useSelector(state => state.school.teachers);
+
   return (
     <div className={style.container}>
       <h3>Classes & Teachers</h3>

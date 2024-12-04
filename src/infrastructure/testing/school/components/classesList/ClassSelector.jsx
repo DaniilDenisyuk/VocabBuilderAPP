@@ -1,8 +1,8 @@
 import style from './index.module.scss';
 
 export default function ClassSelector({ classes, currentClassId, onChange }) {
-  console.log('Classes:', classes);
-  console.log('Current class ID:', currentClassId || '');
+  // console.log('Classes:', classes);
+  // console.log('Current class ID:', currentClassId || '');
   if (!classes || classes.length === 0) {
     return <p>No classes available</p>;
   }

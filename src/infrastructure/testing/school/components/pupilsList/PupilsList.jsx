@@ -1,45 +1,56 @@
-// import { DndContext } from '@dnd-kit/core';
-// import Droppable from '../dnd/Droppable';
 import Draggable from '../dnd/Draggable';
 import style from './index.module.scss';
 import ClassSelector from '../classesList/ClassSelector';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, deleteItem, updItems } from '../../redux/schoolSlice';
 
-export default function PupilsList({
-  pupils = [],
-  classes = [],
-  // onTransfer,
-  onClassChange,
-  onAddPupil,
-  onDelPupil,
-}) {
+export default function PupilsList() {
+  //!
+  const dispatch = useDispatch();
+  const pupils = useSelector(state => state.school.pupils || []);
+  const classes = useSelector(state => state.school.classes || []);
+
+  //!
+  const [error, setError] = useState('');
   const [pupilName, setPupilName] = useState('');
-
-  // const handleDragEnd = event => {
-  //   const { active, over } = event;
-
-  //   if (!active || !over) {
-  //     console.log('Drop failed: no valid target.');
-  //     return;
-  //   }
-
-  //   const pupilId = parseInt(active.id.replace('pupil-', ''), 10);
-  //   const newClassId = parseInt(over.id.replace('class-', ''), 10);
-
-  //   console.log(`Pupil ${pupilId} moved to class ${newClassId}`);
-  //   onTransfer(pupilId, newClassId, true);
-  // };
-  const handleKeyDown = useEnterKeyHandler(handleAddPupil);
 
   function handleAddPupil() {
     if (!pupilName.trim()) {
-      console.warn('Pupil name cannot be empty.');
+      setError('Pupil name cannot be empty');
       return;
     }
-    onAddPupil(pupilName.trim());
+    setError('');
+    const newId = pupils.length > 0 ? pupils[pupils.length - 1].id + 1 : 1;
+
+    dispatch(
+      addItem({
+        field: 'pupils',
+        item: { id: newId, name: pupilName, slassId: '' },
+      })
+    );
     setPupilName('');
   }
+
+  const handleDelPupil = useCallback(
+    id => {
+      if (!id) {
+        console.error('Invalid pupil id:', id);
+        return;
+      }
+
+      const pupilToDelete = pupils.find(cl => cl.id === id);
+      if (pupilToDelete) {
+        dispatch(deleteItem({ field: 'pupils', itemId: id }));
+      } else {
+        console.error('pupil not found:', id);
+      }
+    },
+    [dispatch, pupils]
+  );
+
+  const handleKeyDown = useEnterKeyHandler(handleAddPupil);
 
   return (
     <>
@@ -55,78 +66,60 @@ export default function PupilsList({
           <button onClick={handleAddPupil} className={style.addButton}>
             Add pupil
           </button>
+          {error && <p className={style.error}>{error}</p>}
         </div>
 
         <div className={style.pupilList}>
-          <table className={style.table}>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Class</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pupils.map((pupil, index) => (
-                <tr key={pupil.id} className={style.row}>
-                  <td>
-                    <span className={style.itemNumber}>{index + 1}</span>
-                  </td>
-                  <td>
-                    <Draggable id={`pupil-${pupil.id}`}>{pupil.name}</Draggable>
-                  </td>
-                  <td>
-                    <ClassSelector
-                      classes={classes}
-                      currentClassId={pupil.classId}
-                      onChange={newClassId => onClassChange(pupil.id, newClassId, true)}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={() => onDelPupil(pupil.id)} className={style.deleteButton}>
-                      Delete
-                    </button>
-                  </td>
+          {pupils.length === 0 ? (
+            <p>No pupils available.</p>
+          ) : (
+            <table className={style.table}>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {pupils.map((pupil, index) => (
+                  <tr key={pupil.id} className={style.row}>
+                    <td>
+                      <span className={style.itemNumber}>{index + 1}</span>
+                    </td>
+                    <td>
+                      <Draggable id={`pupil-${pupil.id}`}>{pupil.name}</Draggable>
+                    </td>
+                    <td>
+                      <ClassSelector
+                        classes={classes}
+                        currentClassId={pupil.classId}
+                        onChange={newClassId =>
+                          dispatch(
+                            updItems({
+                              field: 'pupils',
+                              itemId: pupil.id,
+                              updatedData: { classId: newClassId },
+                            })
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleDelPupil(pupil.id)}
+                        className={style.deleteButton}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-        {/* <div className={style.pupilsListByClassContainer}>
-          <h3>Pupils by class</h3>
-          <div className={style.pupilsListByClass}>
-            <DndContext onDragEnd={handleDragEnd}>
-              {classes.map(classItem => {
-                const classPupils = pupils.filter(pupil => pupil.classId === classItem.id);
-
-                return (
-                  <Droppable id={`class-${classItem.id}`} key={classItem.id}>
-                    <div className={style.classContainer}>
-                      <h3>{classItem.name}</h3>
-                      <ol className={style.pupilsList}>
-                        {classPupils.length === 0 ? (
-                          <li>No pupils in this class</li>
-                        ) : (
-                          classPupils.map(pupil => (
-                            <li key={pupil.id}>
-                              <Draggable id={`pupil-${pupil.id}`}>{pupil.name}</Draggable>
-                              <ClassSelector
-                                classes={classes}
-                                currentClassId={pupil.classId}
-                                onChange={newClassId => onClassChange(pupil.id, newClassId, true)}
-                              />
-                            </li>
-                          ))
-                        )}
-                      </ol>
-                    </div>
-                  </Droppable>
-                );
-              })}
-            </DndContext>
-          </div>
-        </div> */}
       </div>
     </>
   );
