@@ -36,29 +36,6 @@ const pupilsClasses = createSlice({
         school => school.classId !== classId || school.pupilId !== pupilId
       );
     },
-    // transferPupil: (state, action) => {
-    //   const { pupilId, newClassId } = action.payload;
-
-    //   // 1. клонувати масив
-    //   const updatedPupilsClasses = [...state.pupilsClasses];
-
-    //   // 2. знайти індекс учня
-    //   const pupilIndex = updatedPupilsClasses.findIndex(pc => pc.pupilId === pupilId);
-
-    //   if (pupilIndex !== -1) {
-    //     // 3. видалити з попереднього класу
-    //     updatedPupilsClasses.splice(pupilIndex, 1);
-    //   } else {
-    //     console.error(`Учня з id ${pupilId} не знайдено`);
-    //     return;
-    //   }
-
-    //   // 4. додати до нового класу
-    //   updatedPupilsClasses.push({ classId: newClassId, pupilId, isClassPupil: true });
-
-    //   // 5.оновити state
-    //   state.pupilsClasses = updatedPupilsClasses;
-    // },
     transferPupil: (state, action) => {
       const { pupilId, newClassId } = action.payload;
 
