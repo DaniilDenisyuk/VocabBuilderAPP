@@ -3,7 +3,6 @@ import styles from './index.module.scss';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { trimObjStrValues } from '../../../../infrastructure/testing/tasks';
-import { useEditWordMutation } from '../../../../infrastructure/api/redux/apiSlice';
 
 const schema = Joi.object({
   en: Joi.string().required().messages({ 'string.base': 'Invalid English word' }),

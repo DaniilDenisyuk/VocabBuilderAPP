@@ -3,13 +3,17 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from './infrastructure/store/store.js';
+import { persistor, store } from './infrastructure/testing/school/redux/store.js';
 import RegisterForm from './features/auth/components/RegisterForm.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
 import LoginForm from './features/auth/components/LoginForm.jsx';
 import { useGetCurrentUserQuery } from './infrastructure/api/redux/apiSlice.js';
-import Training from './pages/training/Training.jsx';
+import Training from './pages/training /Training.jsx';
 import TestPage from './infrastructure/testing/components/TestPage.jsx';
+import SchoolManagement from './infrastructure/testing/school/pages/homePage/index.jsx';
+import ClassPage from './infrastructure/testing/school/pages/classPage/index.jsx';
+import TabsPages from './infrastructure/testing/school/pages/tabsPages/index.jsx';
+import TeacherPage from './infrastructure/testing/school/pages/teacherPage/index.jsx';
 
 const Home = lazy(() => import('./pages/home/Home.jsx'));
 const Dictionary = lazy(() => import('./pages/dictionary/Dictionary.jsx'));
@@ -56,6 +60,12 @@ const App = () => {
               <Route path="/register" element={<RegisterForm />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/testing" element={<TestPage />} />
+              <Route path="/school" element={<SchoolManagement />} />
+              <Route path="/tabsPages" element={<TabsPages />} />
+              <Route path="/class/:classId" element={<ClassPage />} />
+              <Route path="/teacher/:teacherId" element={<TeacherPage />} />
+
+              <Route path="*" element={<div>Page not found</div>} />
             </Route>
           </Routes>
         </Suspense>
