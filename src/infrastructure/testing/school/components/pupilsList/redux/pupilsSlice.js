@@ -27,13 +27,6 @@ const pupilsSlice = createSlice({
     removePupil: (state, action) => {
       state.pupils = state.pupils.filter(pupil => pupil.id !== action.payload);
     },
-    // updPupilClass: (state, action) => {
-    //   const { id, classId } = action.payload;
-    //   const pupil = state.pupils.find(p => p.id === id);
-    //   if (pupil) {
-    //     pupil.classId = classId;
-    //   }
-    // },
     updPupilClass(state, action) {
       const { id, classId } = action.payload;
       const pupilIndex = state.pupils.findIndex(pupil => pupil.id === id);
