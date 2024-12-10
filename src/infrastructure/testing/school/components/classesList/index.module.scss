@@ -46,6 +46,19 @@
   content: '.';
   margin-left: 4px;
 }
+.itemLink {
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.itemLink:hover {
+  background-color: #f1f1f1;
+  color: #007bff;
+}
+
+.itemLink td {
+  padding: 10px;
+}
 .deleteButton {
   background-color: #ff5722;
   color: white;

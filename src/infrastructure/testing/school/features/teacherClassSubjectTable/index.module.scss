@@ -1,0 +1,58 @@
+.tableContainer {
+  margin: 20px;
+}
+
+.toggleButton {
+  padding: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid gray;
+  padding: 8px;
+  text-align: left;
+  position: relative;
+}
+
+table th {
+  background-color: lightgray;
+}
+
+.cellContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: gray;
+}
+
+.editIcon:hover {
+  color: black;
+}
+
+.editingContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  color: red;
+}

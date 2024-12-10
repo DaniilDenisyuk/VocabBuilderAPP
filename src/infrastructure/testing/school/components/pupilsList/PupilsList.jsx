@@ -1,56 +1,51 @@
-import Draggable from '../dnd/Draggable';
+import Draggable from '../../utils/dnd/Draggable';
 import style from './index.module.scss';
-import ClassSelector from '../classesList/ClassSelector';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, deleteItem, updItems } from '../../redux/schoolSlice';
+import { addPupil, removePupil, updPupilClass } from './redux/pupilsSlice';
+import Select from 'react-select';
+import { transferPupil } from '../../features/classesPupils/redux/pupilsClassesSlice';
 
 export default function PupilsList() {
-  //!
   const dispatch = useDispatch();
-  const pupils = useSelector(state => state.school.pupils || []);
-  const classes = useSelector(state => state.school.classes || []);
-
-  //!
-  const [error, setError] = useState('');
+  const pupils = useSelector(state => state.pupils.pupils);
+  const classes = useSelector(state => state.classes.classes);
   const [pupilName, setPupilName] = useState('');
 
   function handleAddPupil() {
-    if (!pupilName.trim()) {
-      setError('Pupil name cannot be empty');
-      return;
+    if (pupilName.trim()) {
+      const newPupil = {
+        id: pupils.length + 1,
+        name: pupilName,
+        classId: '',
+      };
+      dispatch(addPupil(newPupil));
+      setPupilName('');
     }
-    setError('');
-    const newId = pupils.length > 0 ? pupils[pupils.length - 1].id + 1 : 1;
-
-    dispatch(
-      addItem({
-        field: 'pupils',
-        item: { id: newId, name: pupilName, slassId: '' },
-      })
-    );
-    setPupilName('');
   }
 
-  const handleDelPupil = useCallback(
-    id => {
-      if (!id) {
-        console.error('Invalid pupil id:', id);
-        return;
-      }
-
-      const pupilToDelete = pupils.find(cl => cl.id === id);
-      if (pupilToDelete) {
-        dispatch(deleteItem({ field: 'pupils', itemId: id }));
-      } else {
-        console.error('pupil not found:', id);
-      }
-    },
-    [dispatch, pupils]
-  );
+  const handleRemovePupil = id => {
+    dispatch(removePupil(id));
+  };
 
   const handleKeyDown = useEnterKeyHandler(handleAddPupil);
+
+  const classesOptions = classes.map(cl => ({
+    label: cl.name,
+    value: cl.id,
+  }));
+
+  function getSelectedClass(classId) {
+    return classesOptions.find(option => option.value === classId || null);
+  }
+
+  function handleClassChange(selectedClass, pupilId) {
+    const newClassId = selectedClass.value;
+
+    dispatch(updPupilClass({ id: pupilId, classId: selectedClass.value }));
+    dispatch(transferPupil({ pupilId, newClassId }));
+  }
 
   return (
     <>
@@ -66,7 +61,6 @@ export default function PupilsList() {
           <button onClick={handleAddPupil} className={style.addButton}>
             Add pupil
           </button>
-          {error && <p className={style.error}>{error}</p>}
         </div>
 
         <div className={style.pupilList}>
@@ -92,23 +86,16 @@ export default function PupilsList() {
                       <Draggable id={`pupil-${pupil.id}`}>{pupil.name}</Draggable>
                     </td>
                     <td>
-                      <ClassSelector
-                        classes={classes}
-                        currentClassId={pupil.classId}
-                        onChange={newClassId =>
-                          dispatch(
-                            updItems({
-                              field: 'pupils',
-                              itemId: pupil.id,
-                              updatedData: { classId: newClassId },
-                            })
-                          )
-                        }
+                      <Select
+                        value={getSelectedClass(pupil.classId)}
+                        onChange={selectedClass => handleClassChange(selectedClass, pupil.id)}
+                        options={classesOptions}
+                        placeholder="Select class"
                       />
                     </td>
                     <td>
                       <button
-                        onClick={() => handleDelPupil(pupil.id)}
+                        onClick={() => handleRemovePupil(pupil.id)}
                         className={style.deleteButton}
                       >
                         Delete

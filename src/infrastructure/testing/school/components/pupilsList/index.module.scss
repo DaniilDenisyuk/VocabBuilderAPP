@@ -15,11 +15,15 @@
 }
 .table th,
 .table td {
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #ddd;
   text-align: left;
+  box-sizing: border-box;
 }
-
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: auto;
+}
 .table th {
   font-weight: bold;
 }

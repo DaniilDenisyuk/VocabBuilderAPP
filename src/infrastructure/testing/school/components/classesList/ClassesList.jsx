@@ -1,54 +1,41 @@
 import { useDispatch, useSelector } from 'react-redux';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
-import Draggable from '../dnd/Draggable';
+import Draggable from '../../utils/dnd/Draggable';
 import style from './index.module.scss';
 import { useCallback, useState } from 'react';
-import { addItem, deleteItem } from '../../redux/schoolSlice';
+import { addClass, removeClass } from './redux/classesSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function ClassesList() {
-  //!
   const dispatch = useDispatch();
-  //отримати класи зі стор
-  const classes = useSelector(state => state.school.classes || []);
-  //!
+  const navigate = useNavigate();
+  const classes = useSelector(state => state.classes.classes);
   const [className, setClassName] = useState('');
-  const [error, setError] = useState('');
 
-  function handleAddClass() {
-    if (className.trim() === '') {
-      setError('Class name cannot be empty.');
-      return;
+  const handleAddClass = useCallback(() => {
+    if (className.trim()) {
+      const newClass = {
+        id: classes.length + 1,
+        name: className,
+      };
+      dispatch(addClass(newClass));
+      setClassName('');
     }
-    setError('');
-    const newId = classes.length > 0 ? classes[classes.length - 1].id + 1 : 1;
+  }, [dispatch, className]);
 
-    dispatch(
-      addItem({
-        field: 'classes',
-        item: { id: newId, name: className, teacherIds: [], pupilIds: [] },
-      })
-    );
-    // onAddClass(className);
-    setClassName('');
-  }
-  const handleDelClass = useCallback(
+  const handleRemoveClass = useCallback(
     id => {
-      if (!id) {
-        console.error('Invalid class id:', id);
-        return;
-      }
-
-      const classToDelete = classes.find(cl => cl.id === id);
-      if (classToDelete) {
-        dispatch(deleteItem({ field: 'classes', itemId: id }));
-      } else {
-        console.error('Class not found:', id);
-      }
+      dispatch(removeClass(id));
     },
-    [dispatch, classes]
+    [dispatch]
   );
 
   const handleKeyDown = useEnterKeyHandler(handleAddClass);
+
+  const handleClassClick = classId => {
+    navigate(`/class/${classId}`);
+  };
+
   return (
     <>
       <div className={style.classesContainer}>
@@ -63,7 +50,6 @@ export default function ClassesList() {
           <button onClick={handleAddClass} className={style.addButton}>
             Add class
           </button>
-          {error && <p className={style.error}>{error}</p>}
           <div className={style.classesList}>
             {classes && classes.length > 0 ? (
               <table className={style.table}>
@@ -76,7 +62,11 @@ export default function ClassesList() {
                 </thead>
                 <tbody>
                   {classes.map((cl, index) => (
-                    <tr key={cl.id} className={style.classItem}>
+                    <tr
+                      key={cl.id}
+                      className={style.itemLink}
+                      onClick={() => handleClassClick(cl.id)}
+                    >
                       <td>
                         <span className={style.itemNumber}>{index + 1}</span>
                       </td>
@@ -85,7 +75,10 @@ export default function ClassesList() {
                       </td>
                       <td>
                         <button
-                          onClick={() => handleDelClass(cl.id)}
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleRemoveClass(cl.id);
+                          }}
                           className={style.deleteButton}
                         >
                           Delete

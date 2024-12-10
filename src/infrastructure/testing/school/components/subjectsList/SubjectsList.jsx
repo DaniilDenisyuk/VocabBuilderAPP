@@ -1,51 +1,33 @@
 import { useDispatch, useSelector } from 'react-redux';
 import useEnterKeyHandler from '../../hooks/useEnterKeyHandler';
-import Draggable from '../dnd/Draggable';
+import Draggable from '../../utils/dnd/Draggable';
 import style from './index.module.scss';
 import { useCallback, useState } from 'react';
-import { addItem, deleteItem } from '../../redux/schoolSlice';
+import { addSubject, removeSubject } from './redux/subjectsSlice';
 
 export default function SubjectsList() {
   const dispatch = useDispatch();
-  const subjects = useSelector(state => state.school.subjects || []);
+  const subjects = useSelector(state => state.subjects.subjects);
 
   const [subjectName, setSubjectName] = useState('');
-  const [error, setError] = useState('');
 
   const handleAddSubject = useCallback(() => {
-    if (!subjectName.trim()) {
-      setError('Subject name cannot be empty');
-      return;
+    if (subjectName.trim()) {
+      const newPupil = {
+        id: subjects.length + 1,
+        name: subjectName,
+      };
+      dispatch(addSubject(newPupil));
+      setSubjectName('');
     }
-    setError('');
-    const newId = subjects.length > 0 ? subjects[subjects.length - 1].id + 1 : 1;
-
-    dispatch(
-      addItem({
-        field: 'subjects',
-        item: { id: newId, name: subjectName, teacherIds: [] },
-      })
-    );
-    setSubjectName('');
   }, [dispatch, subjectName]);
 
-  const handleDelSubject = useCallback(
+  const handleRemoveSubject = useCallback(
     id => {
-      if (!id) {
-        console.error('Invalid subject id:', id);
-        return;
-      }
-
-      const subjectToDelete = subjects.find(cl => cl.id === id);
-      if (subjectToDelete) {
-        dispatch(deleteItem({ field: 'subjects', itemId: id }));
-      } else {
-        console.error('subject not found:', id);
-      }
+      dispatch(removeSubject(id));
     },
-    [dispatch, subjects]
+    [dispatch]
   );
-
   const handleKeyDown = useEnterKeyHandler(handleAddSubject);
 
   return (
@@ -62,7 +44,6 @@ export default function SubjectsList() {
         <button onClick={handleAddSubject} className={style.addButton}>
           Add subject
         </button>
-        {error && <p className={style.error}>{error}</p>}
       </div>
 
       <div className={style.subjectsList}>
@@ -86,7 +67,7 @@ export default function SubjectsList() {
                   </td>
                   <td>
                     <button
-                      onClick={() => handleDelSubject(subject.id)}
+                      onClick={() => handleRemoveSubject(subject.id)}
                       className={style.deleteButton}
                     >
                       Delete
