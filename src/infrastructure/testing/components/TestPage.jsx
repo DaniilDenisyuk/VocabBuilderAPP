@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
-import { store } from '../school/redux/store';
-import SchoolManagement from '../school/pages/homePage';
+import { store } from '../../../store/store';
+import SchoolManagement from '../../school/pages/homePage';
 
 export default function TestPage() {
   return (

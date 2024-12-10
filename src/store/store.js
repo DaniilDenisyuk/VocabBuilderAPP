@@ -4,21 +4,22 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import wordsReducer from '../../../../features/dictionary/redux/wordsSlice';
-import categoriesReducer from '../../../../features/category/redux/categoriesSlice';
-import filtersReducer from '../../../../features/filter/redux/filtersSlice';
-import { apiSlice } from '../../../api/redux/apiSlice';
-import authReducer from '../../../../features/auth/redux/authSlice';
+import wordsReducer from '../features/dictionary/redux/wordsSlice.js';
+
+import categoriesReducer from '../features/category/redux/categoriesSlice';
+import filtersReducer from '../features/filter/redux/filtersSlice';
+import authReducer from '../features/auth/redux/authSlice';
 //
-import schoolReducer from './schoolSlice';
-import pupilsReducer from '../components/pupilsList/redux/pupilsSlice';
-import teachersReducer from '../components/teachersList/redux/teachersSlice';
-import classesReducer from '../components/classesList/redux/classesSlice';
-import subjectsReducer from '../components/subjectsList/redux/subjectsSlice';
-import teachersClassesReducer from '../features/сlassesTeachers/redux/teachersClassesSlice';
-import teachersSubjectsReducer from '../features/teacherSubject/redux/teacherSubjectSlice';
-import pupilsClassesReducer from '../features/classesPupils/redux/pupilsClassesSlice';
-import teachersClassesSubjectsReducer from '../features/teacherClassSubjectTable/redux/teachersClassesSubjectsSlice';
+import schoolReducer from '../infrastructure/school/redux/schoolSlice';
+import pupilsReducer from '../infrastructure/school/components/pupilsList/redux/pupilsSlice';
+import teachersReducer from '../infrastructure/school/components/teachersList/redux/teachersSlice';
+import classesReducer from '../infrastructure/school/components/classesList/redux/classesSlice';
+import subjectsReducer from '../infrastructure/school/components/subjectsList/redux/subjectsSlice';
+import teachersClassesReducer from '../infrastructure/school/features/сlassesTeachers/redux/teachersClassesSlice';
+import teachersSubjectsReducer from '../infrastructure/school/features/teacherSubject/redux/teacherSubjectSlice';
+import pupilsClassesReducer from '../infrastructure/school/features/classesPupils/redux/pupilsClassesSlice';
+import teachersClassesSubjectsReducer from '../infrastructure/school/features/teacherClassSubjectTable/redux/teachersClassesSubjectsSlice';
+import { apiSlice } from '../infrastructure/api/redux/apiSlice';
 
 // https://redux-toolkit.js.org/api/combineSlices
 // apiSlice  додати до основного редюсера для обробки запитів API,

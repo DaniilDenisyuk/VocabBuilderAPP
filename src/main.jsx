@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import { persistor, store } from './infrastructure/testing/school/redux/store.js';
+import { persistor, store } from './store/store.js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 

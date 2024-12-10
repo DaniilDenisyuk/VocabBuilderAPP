@@ -1,7 +1,7 @@
 //apiSlice.jsx
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setUser } from '../../../features/auth/redux/authSlice';
-import { store } from '../../testing/school/redux/store';
+import { store } from '../../../store/store';
 
 export const apiSlice = createApi({
   reducerPath: 'api/',
