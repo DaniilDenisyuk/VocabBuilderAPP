@@ -1,10 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { apiSlice } from '../../../../../api/redux/apiSlice';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const fetchSubjects = createAsyncThunk('subjects/fetchSubjects', async () => {
-  const result = await apiSlice.endpoints.getSubjects.initiate();
-  return result.data;
-});
 const initialState = {
   subjects: [
     { id: 1, name: 'Math' },

@@ -46,7 +46,6 @@ export default function MultiSelect({ options, value, onChange, placeholder, isM
       components={animatedComponents}
       value={value}
       onChange={selectedOptions => {
-        // console.log('selectedOptions:', selectedOptions);
         onChange(selectedOptions);
       }}
       options={options}
