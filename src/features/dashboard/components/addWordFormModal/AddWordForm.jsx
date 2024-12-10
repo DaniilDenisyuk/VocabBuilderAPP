@@ -10,7 +10,7 @@ import {
 import CategoryAndVerbTypeSelector from '../../../category/components';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { showNotification } from '../../../../infrastructure/store/notificationSlice';
+import { showNotification } from '../../../../store/notificationSlice';
 
 export default function AddWordForm({ onClose, className, refetchTable }) {
   const dispatch = useDispatch();
