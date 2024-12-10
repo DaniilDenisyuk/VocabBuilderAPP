@@ -56,7 +56,6 @@ export default function TeacherClassSubjectTable() {
       .filter(rel => !updatedSubjects.includes(rel.subjectId))
       .map(rel => rel.subjectId);
 
-    // Dispatch actions to update the backend and the state
     if (subjectsToAdd.length > 0) {
       dispatch(addTeachersToSubject({ teacherId, classId, subjectIds: subjectsToAdd }));
     }
@@ -65,7 +64,6 @@ export default function TeacherClassSubjectTable() {
       dispatch(removeTeacherFromSubject({ teacherId, classId, subjectIds: subjectsToRemove }));
     }
 
-    // Update local state to reflect the changes
     setEditingCell(null);
     setTempSelection([]);
   };
