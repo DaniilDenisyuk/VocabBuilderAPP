@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   addTeachersToSubject,
   removeTeacherFromSubject,
-} from '../../features/teacherSubject/redux/teacherSubjectSlice';
+} from '../../features/teacherSubject/redux/teachersSubjectsSlice';
 import MultiSelect from '../../features/selects/MultiSelect';
 import EditCloseSelectButton from '../../features/selects/EditCloseSelectButton';
 
@@ -22,10 +22,7 @@ export default function TeacherPage() {
   const teachersSubjects = useSelector(state => state.teachersSubjects.teachersSubjects || []);
   const subjects = useSelector(state => state.subjects.subjects || []);
 
-  const teacher = teachers.find(t => t.id === parseInt(teacherId));
-  if (!teacher) {
-    return <p>Teacher not found</p>;
-  }
+  const teacher = teachers.find(t => t.id === teacherId);
 
   const teachingClasses = useMemo(
     () => teachersClasses.filter(tc => tc.teacherId === teacher.id),
@@ -102,6 +99,9 @@ export default function TeacherPage() {
 
   const handleGoHome = () => navigate('/testing');
   const handleGoBack = () => navigate(-1);
+  if (!teacher) {
+    return <p>Teacher not found</p>;
+  }
 
   return (
     <>
@@ -115,7 +115,7 @@ export default function TeacherPage() {
       <p>
         <strong>Class teacher:</strong> {classTeacherName}
       </p>
-      <h3>List of classes and their subjects:</h3>
+      <h3>List of classes - subjects:</h3>
       <ul>
         {classSubjectsMap.length > 0 ? (
           classSubjectsMap.map(({ classId, className, subjects }) => (

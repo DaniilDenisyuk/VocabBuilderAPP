@@ -13,30 +13,60 @@ const initialState = {
     { id: 9, name: 'Pupil9', classId: 0 },
     { id: 10, name: 'Pupil10', classId: 0 },
   ],
+  teachersClasses: [],
+  teachersSubjects: [],
+  teachersClassesSubjects: [],
 };
+
 const pupilsSlice = createSlice({
   name: 'pupils',
   initialState,
   reducers: {
-    setPupils: (state, action) => {
-      state.pupils = action.payload;
-    },
     addPupil: (state, action) => {
-      state.pupils.push(action.payload);
+      const newPupil = action.payload;
+      state.pupils.push(newPupil);
+
+      state.teachersClasses.push({ pupilId: newPupil.id, classId: newPupil.classId });
+      state.teachersSubjects.push({ pupilId: newPupil.id, subjectIds: [] });
+      state.teachersClassesSubjects.push({
+        pupilId: newPupil.id,
+        classId: newPupil.classId,
+        subjectIds: [],
+      });
     },
     removePupil: (state, action) => {
-      state.pupils = state.pupils.filter(pupil => pupil.id !== action.payload);
-    },
-    updPupilClass(state, action) {
-      const { id, classId } = action.payload;
-      const pupilIndex = state.pupils.findIndex(pupil => pupil.id === id);
+      const pupilId = action.payload;
 
-      if (pupilIndex !== -1) {
-        state.pupils[pupilIndex] = { ...state.pupils[pupilIndex], classId };
+      state.pupils = state.pupils.filter(pupil => pupil.id !== pupilId);
+      state.teachersClasses = state.teachersClasses.filter(item => item.pupilId !== pupilId);
+      state.teachersSubjects = state.teachersSubjects.filter(item => item.pupilId !== pupilId);
+      state.teachersClassesSubjects = state.teachersClassesSubjects.filter(
+        item => item.pupilId !== pupilId
+      );
+    },
+
+    addPupilToClass: (state, action) => {
+      const { pupilId, newClassId } = action.payload;
+      const pupil = state.pupils.find(pupil => pupil.id === pupilId);
+
+      if (pupil) {
+        pupil.classId = newClassId;
+
+        const pupilClass = state.teachersClasses.find(item => item.pupilId === pupilId);
+        if (pupilClass) {
+          pupilClass.classId = newClassId;
+        }
+
+        const pupilClassesSubjects = state.teachersClassesSubjects.find(
+          item => item.pupilId === pupilId
+        );
+        if (pupilClassesSubjects) {
+          pupilClassesSubjects.classId = newClassId;
+        }
       }
     },
   },
 });
-export const { addPupil, removePupil, updPupilClass } = pupilsSlice.actions;
 
+export const { addPupil, removePupil, addPupilToClass } = pupilsSlice.actions;
 export default pupilsSlice.reducer;

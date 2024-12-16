@@ -1,7 +1,8 @@
 const SelectOptionsToText = ({ selectedOptions }) => {
   const text =
-    selectedOptions.length > 0 ? selectedOptions.map(option => option.label).join(', ') : '-';
-
+    Array.isArray(selectedOptions) && selectedOptions.length > 0
+      ? selectedOptions.map(option => option.label).join(', ')
+      : '-';
   return <span>{text}</span>;
 };
 

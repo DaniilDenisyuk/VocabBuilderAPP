@@ -4,10 +4,11 @@ import style from './index.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndContext } from '@dnd-kit/core';
 import { transferPupil } from './redux/pupilsClassesSlice';
-import { updPupilClass } from '../../components/pupilsList/redux/pupilsSlice';
+import { addPupilToClass } from '../../components/pupilsList/redux/pupilsSlice';
 
 export default function ClassesWithPupils() {
   const dispatch = useDispatch();
+
   const classes = useSelector(state => state.classes.classes);
   const pupils = useSelector(state => state.pupils.pupils);
   const pupilsClasses = useSelector(state => state.pupilsClasses.pupilsClasses);
@@ -20,7 +21,7 @@ export default function ClassesWithPupils() {
     const pupilId = parseInt(active.id.split('-')[1], 10);
     const newClassId = parseInt(over.id.split('-')[1], 10);
 
-    dispatch(updPupilClass({ id: pupilId, classId: newClassId }));
+    dispatch(addPupilToClass({ id: pupilId, classId: newClassId }));
     dispatch(transferPupil({ pupilId, newClassId }));
   };
 

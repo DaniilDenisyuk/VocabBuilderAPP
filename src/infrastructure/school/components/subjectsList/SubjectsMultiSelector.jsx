@@ -30,11 +30,7 @@ export default function SubjectsMultiSelector({
 
   return (
     <div>
-      <select
-        onChange={e => handleAddSubject(parseInt(e.target.value, 10))}
-        value=""
-        className={style.selector}
-      >
+      <select onChange={e => handleAddSubject(e.target.value)} value="" className={style.selector}>
         <option value="" disabled>
           Choose a subject
         </option>

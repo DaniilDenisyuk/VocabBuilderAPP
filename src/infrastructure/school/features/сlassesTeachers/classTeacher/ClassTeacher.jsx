@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import EditCloseSelectButton from '../../selects/EditCloseSelectButton';
+import { useSelector } from 'react-redux';
 
-export default function ClassTeacher({ classTeacher, teachers, handleTeacherChange }) {
+export default function ClassTeacher({ teachers, classId, handleTeacherChange }) {
   const [isEditing, setIsEditing] = useState(false);
+
+  const classTeacher = useSelector(
+    state =>
+      state.teachersClasses.teachersClasses.find(tc => tc.classId === classId && tc.isClassTeacher)
+        ?.teacherId
+  );
 
   const currentTeacher = teachers.find(teacher => teacher.id === classTeacher);
 

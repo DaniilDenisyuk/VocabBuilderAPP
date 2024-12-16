@@ -2,34 +2,61 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   subjects: [
-    { id: 1, name: 'Math' },
-    { id: 2, name: 'Science' },
-    { id: 3, name: 'History' },
-    { id: 4, name: 'English' },
-    { id: 5, name: 'Geography' },
-    { id: 6, name: 'Art' },
-    { id: 7, name: 'Physical Education' },
-    { id: 8, name: 'Music' },
-    { id: 9, name: 'Literature' },
-    { id: 10, name: 'Chemistry' },
+    { id: 101, name: 'Mathematics' },
+    { id: 102, name: 'Physics' },
+    { id: 103, name: 'Chemistry' },
   ],
+  teachersClasses: [],
+  teachersSubjects: [],
+  teachersClassesSubjects: [],
 };
+
 const subjectsSlice = createSlice({
   name: 'subjects',
   initialState,
   reducers: {
-    setSubjects: (state, action) => {
-      state.subjects = action.payload;
-    },
     addSubject: (state, action) => {
-      state.subjects.push(action.payload);
+      const newSubject = action.payload;
+      state.subjects.push(newSubject);
+
+      state.teachersClasses.push({ subjectId: newSubject.id, classIds: [] });
+      state.teachersSubjects.push({ subjectId: newSubject.id, teacherIds: [] });
+      state.teachersClassesSubjects.push({
+        subjectId: newSubject.id,
+        teacherIds: [],
+        classIds: [],
+      });
     },
     removeSubject: (state, action) => {
-      state.subjects = state.subjects.filter(subject => subject.id !== action.payload);
+      const subjectId = action.payload;
+      state.subjects = state.subjects.filter(subject => subject.id !== subjectId);
+
+      state.teachersClasses = state.teachersClasses.filter(item => item.subjectId !== subjectId);
+      state.teachersSubjects = state.teachersSubjects.filter(item => item.subjectId !== subjectId);
+      state.teachersClassesSubjects = state.teachersClassesSubjects.filter(
+        item => item.subjectId !== subjectId
+      );
+    },
+    addTeacherToSubject: (state, action) => {
+      const { subjectId, teacherId } = action.payload;
+      const subject = state.teachersSubjects.find(sub => sub.subjectId === subjectId);
+
+      if (subject && !subject.teacherIds.includes(teacherId)) {
+        subject.teacherIds.push(teacherId);
+      }
+    },
+    removeTeacherFromSubject: (state, action) => {
+      const { subjectId, teacherId } = action.payload;
+      const subject = state.teachersSubjects.find(sub => sub.subjectId === subjectId);
+
+      if (subject) {
+        subject.teacherIds = subject.teacherIds.filter(id => id !== teacherId);
+      }
     },
   },
 });
 
-export const { setSubjects, addSubject, removeSubject } = subjectsSlice.actions;
+export const { addSubject, removeSubject, addTeacherToSubject, removeTeacherFromSubject } =
+  subjectsSlice.actions;
 
 export default subjectsSlice.reducer;

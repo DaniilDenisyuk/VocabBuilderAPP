@@ -78,7 +78,7 @@ export default function SubjectsList() {
             </tbody>
           </table>
         ) : (
-          <p>No subjects available</p>
+          <p>No subjects</p>
         )}
       </div>
     </div>

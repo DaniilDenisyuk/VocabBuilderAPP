@@ -1,18 +1,17 @@
-// import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { setClassTeacher } from '../../features/сlassesTeachers/redux/teachersClassesSlice';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useMemo, useCallback } from 'react';
 import style from './index.module.scss';
 import ClassPupils from '../../features/classesPupils/ClassPupils';
-import { useCallback, useMemo, useState } from 'react';
+import MultiSelect from '../../features/selects/MultiSelect';
+import EditCloseSelectButton from '../../features/selects/EditCloseSelectButton';
+import ClassTeacher from '../../features/сlassesTeachers/classTeacher/ClassTeacher';
+import { setClassTeacher } from '../../features/сlassesTeachers/redux/classesTeachersSlice';
+import { selectClassById } from '../../components/classesList/redux/classesSlice';
 import {
   addTeachersToSubject,
   removeTeacherFromSubject,
-} from '../../features/teacherSubject/redux/teacherSubjectSlice';
-import MultiSelect from '../../features/selects/MultiSelect';
-import ClassTeacher from '../../features/сlassesTeachers/classTeacher/ClassTeacher';
-import EditCloseSelectButton from '../../features/selects/EditCloseSelectButton';
+} from '../../features/teacherSubject/redux/teachersSubjectsSlice';
 
 export default function ClassPage() {
   const dispatch = useDispatch();
@@ -20,32 +19,21 @@ export default function ClassPage() {
   const { classId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
 
-  const classes = useSelector(state => state.classes.classes || []);
+  const classData = useSelector(state => selectClassById(state, classId));
   const pupils = useSelector(state => state.pupils.pupils || []);
   const teachers = useSelector(state => state.teachers.teachers || []);
   const subjects = useSelector(state => state.subjects.subjects || []);
   const teachersClasses = useSelector(state => state.teachersClasses.teachersClasses || []);
   const teachersSubjects = useSelector(state => state.teachersSubjects.teachersSubjects || []);
 
-  const classData = useMemo(
-    () => classes.find(cl => cl.id === parseInt(classId)),
-    [classes, classId]
-  );
-  //class teacher
-  const classTeacher = useMemo(
-    () => teachersClasses.find(tc => tc.classId === classData?.id && tc.isClassTeacher)?.teacherId,
-    [teachersClasses, classData]
-  );
-
   const handleTeacherChange = useCallback(
     e => {
-      const newTeacherId = parseInt(e.target.value);
+      const newTeacherId = e.target.value;
       dispatch(setClassTeacher({ classId: classData.id, teacherId: newTeacherId }));
     },
     [dispatch, classData]
   );
 
-  //teachers
   const classTeachers = useMemo(
     () =>
       teachers.filter(teacher =>
@@ -109,6 +97,7 @@ export default function ClassPage() {
   const handleGoBack = () => {
     navigate(-1);
   };
+
   if (!classData) {
     return <p>Class not found</p>;
   }
@@ -125,8 +114,8 @@ export default function ClassPage() {
         <h1>{classData.name}</h1>
 
         <ClassTeacher
-          classTeacher={classTeacher}
           teachers={teachers}
+          classId={classData?.id}
           handleTeacherChange={handleTeacherChange}
         />
 

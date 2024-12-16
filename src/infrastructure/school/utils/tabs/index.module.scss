@@ -33,7 +33,7 @@
 }
 
 .tabsHeader .activeTab {
-  background: #ddd;
+  background-color: yellow;
   font-weight: bold;
   color: #333;
   border-color: #bbb;
@@ -68,4 +68,20 @@
   background-color: #f9f9f9;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.tabContent {
+  background-color: yellow;
+
+  .tab {
+    background-color: yellow;
+
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+  }
+
+  .tab.active {
+    color: #000;
+  }
 }

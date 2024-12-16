@@ -8,7 +8,7 @@ import PupilsList from '../../components/pupilsList/PupilsList';
 import TeachersList from '../../components/teachersList/TeachersList';
 import SubjectsList from '../../components/subjectsList/SubjectsList';
 
-import { addItem, deleteItem } from '../../redux/schoolSlice';
+import { addItem, deleteItem } from '../redux/schoolSlice';
 
 import style from './index.module.scss';
 
