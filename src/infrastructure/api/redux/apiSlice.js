@@ -1,10 +1,10 @@
 //apiSlice.jsx
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setUser } from '../../../features/auth/redux/authSlice';
-import { store } from '../../store/store';
+import { store } from '../../../store/store';
 
 export const apiSlice = createApi({
-  reducerPath: 'api',
+  reducerPath: 'api/',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: headers => {
@@ -173,27 +173,150 @@ export const apiSlice = createApi({
         body: answers,
       }),
     }),
+
+    //! School Management endpoints
+
+    //teachers
+    getTeachers: builder.query({
+      query: () => '/school/teachers',
+    }),
+    getTeacherById: builder.query({
+      query: id => `/teachers/${id}`,
+    }),
+    createTeacher: builder.mutation({
+      query: newTeacher => ({
+        url: '/school/teachers',
+        method: 'POST',
+        body: newTeacher,
+      }),
+    }),
+    updateTeacher: builder.mutation({
+      query: ({ id, updatedTeacher }) => ({
+        url: `/school/teachers/${id}`,
+        method: 'PATCH',
+        body: updatedTeacher,
+      }),
+    }),
+    deleteTeacher: builder.mutation({
+      query: id => ({
+        url: `/school/teachers/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    // classes
+    getClasses: builder.query({
+      query: () => '/school/classes',
+    }),
+    getClassById: builder.query({
+      query: id => `/school/classes/${id}`,
+    }),
+    createClass: builder.mutation({
+      query: newClass => ({
+        url: '/school/classes',
+        method: 'POST',
+        body: newClass,
+      }),
+    }),
+    updateClass: builder.mutation({
+      query: ({ id, updatedClass }) => ({
+        url: `/school/classes/${id}`,
+        method: 'PATCH',
+        body: updatedClass,
+      }),
+    }),
+    deleteClass: builder.mutation({
+      query: id => ({
+        url: `/school/classes/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    // pupils
+    getPupils: builder.query({
+      query: () => '/school/pupils',
+    }),
+    getPupilById: builder.query({
+      query: id => `/school/pupils/${id}`,
+    }),
+    createPupil: builder.mutation({
+      query: newPupil => ({
+        url: '/school/pupils',
+        method: 'POST',
+        body: newPupil,
+      }),
+    }),
+    updatePupil: builder.mutation({
+      query: ({ id, updatedPupil }) => ({
+        url: `/school/pupils/${id}`,
+        method: 'PATCH',
+        body: updatedPupil,
+      }),
+    }),
+    deletePupil: builder.mutation({
+      query: id => ({
+        url: `/school/pupils/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    // subjects
+    getSubjects: builder.query({
+      query: () => '/school/subjects',
+    }),
+    getSubjectById: builder.query({
+      query: id => `/school/subjects/${id}`,
+    }),
+    createSubject: builder.mutation({
+      query: newSubject => ({
+        url: '/school/subjects',
+        method: 'POST',
+        body: newSubject,
+      }),
+    }),
+    updateSubject: builder.mutation({
+      query: ({ id, updatedSubject }) => ({
+        url: `/school/subjects/${id}`,
+        method: 'PATCH',
+        body: updatedSubject,
+      }),
+    }),
+    deleteSubject: builder.mutation({
+      query: id => ({
+        url: `/school/subjects/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
 export const {
+  useGetTeachersQuery,
+  useGetTeacherByIdQuery,
+  useCreateTeacherMutation,
+  useUpdateTeacherMutation,
+  useDeleteTeacherMutation,
+  useGetClassesQuery,
+  useGetClassByIdQuery,
+  useCreateClassMutation,
+  useUpdateClassMutation,
+  useDeleteClassMutation,
+  useGetPupilsQuery,
+  useGetPupilByIdQuery,
+  useCreatePupilMutation,
+  useUpdatePupilMutation,
+  useDeletePupilMutation,
+  useGetSubjectsQuery,
+  useGetSubjectByIdQuery,
+  useCreateSubjectMutation,
+  useUpdateSubjectMutation,
+  useDeleteSubjectMutation,
+} = apiSlice;
+
+export const {
   useSignUpMutation,
+  usePostAnswersMutation,
+  useFetchTasksQuery,
   useSignInMutation,
   useGetCurrentUserQuery,
-  useSignOutMutation,
-  useGetWordsCategoriesQuery,
-  useGetVerbTypesQuery,
-  useCreateWordMutation,
-  useAddWordMutation,
-  useEditWordMutation,
-  useGetWordsAllQuery,
-  useGetUserWordsQuery,
-  useDeleteWordMutation,
-  useGetUserStatisticsQuery,
-  useGetUserTasksQuery,
-  usePostAnswersMutation,
-  // useGetWordPaginatedQuery,
-  useFetchTasksQuery,
-  useSaveUserAnswersMutation,
-  useGetWordAllPaginatedQuery,
 } = apiSlice;
