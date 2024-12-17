@@ -94,6 +94,14 @@ const relationsSlice = createSlice({
         }
       });
     },
+    toggleSelector(state, action) {
+      const { cellId } = action.payload;
+      if (state.activeSelectorCell === cellId) {
+        state.activeSelectorCell = null;
+      } else {
+        state.activeSelectorCell = cellId;
+      }
+    },
   },
 });
 
@@ -103,6 +111,7 @@ export const {
   updateSelectedValues,
   updateRelationByKey,
   addTeachersSubjectsClasses,
+  toggleSelector,
 } = relationsSlice.actions;
 
 export const getTableData = (state, tableType) => state.relations[tableType];

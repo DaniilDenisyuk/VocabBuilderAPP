@@ -1,10 +1,15 @@
 import { FaEdit, FaTimes } from 'react-icons/fa';
-import style from './index.module.scss';
+// import style from './index.module.scss';
 
 export default function EditCloseSelectButton({ isEditing, onToggleEdit }) {
   return (
-    <span onClick={onToggleEdit} className={style.editIcon}>
+    <button
+      onClick={() => {
+        console.log('Edit button clicked!');
+        onToggleEdit();
+      }}
+    >
       {isEditing ? <FaTimes /> : <FaEdit />}
-    </span>
+    </button>
   );
 }

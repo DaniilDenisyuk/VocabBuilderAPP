@@ -62,7 +62,6 @@ export default function TeachersWithClasses() {
 
   const getSelectedClasses = useCallback(
     teacherId => {
-      console.log(`Getting selected classes for teacher ${teacherId}`);
       const teacherClasses = teachersClasses.find(rel => rel.teacherId === teacherId);
       const selectedClasses = (teacherClasses?.classIds || [])
         .map(classId => {
@@ -71,7 +70,6 @@ export default function TeachersWithClasses() {
         })
         .filter(Boolean);
 
-      console.log(`Selected classes for teacher ${teacherId}:`, selectedClasses);
       return selectedClasses;
     },
     [classes, teachersClasses]
